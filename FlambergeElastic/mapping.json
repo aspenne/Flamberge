@@ -1,0 +1,56 @@
+{
+  "mappings": {
+    "properties": {
+      "film": {
+        "properties": {
+          "idFilm": { "type": "integer" },
+          "titre": { "type": "text" },
+          "isAdult": { "type": "integer" },
+          "anneeSortie": { "type": "integer" },
+          "poster": { "type": "text" },
+          "description": { "type": "text" },
+          "dureeMinutes": { "type": "keyword" },
+          "note": { "type": "float" },
+          "nbVotes": { "type": "integer" }
+        }
+      },
+      "artiste": {
+        "properties": {
+          "idArtiste": { "type": "integer" },
+          "nomArtiste": { "type": "text" }
+        }
+      },
+      "metier": {
+        "properties": {
+          "idMetier": { "type": "integer" },
+          "nomMetier": { "type": "text" }
+        }
+      },
+      "exerce_metier": {
+        "properties": {
+          "idMetier": { "type": "integer" },
+          "idArtiste": { "type": "integer" }
+        }
+      },
+      "role": {
+        "properties": {
+          "idFilm": { "type": "integer" },
+          "idArtiste": { "type": "integer" },
+          "nomRole": { "type": "text" }
+        }
+      },
+      "genre": {
+        "properties": {
+          "idGenre": { "type": "integer" },
+          "nomGenre": { "type": "text" }
+        }
+      },
+      "possede_genre": {
+        "properties": {
+          "idGenre": { "type": "integer" },
+          "idFilm": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

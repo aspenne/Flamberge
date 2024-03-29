@@ -1,0 +1,164 @@
+section > h3 {
+    margin-left: 2em;
+}
+
+.main_p_details_film section article {
+    display: flex;
+}
+
+.section_resumer_detail{
+    /* width: 100%; */
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding : 2em 0 0 3em;
+    background-color: #111;
+}
+
+.note_etoile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 10em;
+}
+
+.film {
+    flex-direction: row;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.film_reco {
+    display: flex;
+    justify-content: center;
+}
+
+#div_button_genres button {
+    background-color: transparent;
+    color: white;
+    padding: 0.4em;
+    cursor: pointer;
+}
+
+#div_button_genres button:hover {
+    background-color: var(--principale-sombre);
+}
+
+.button {
+    background-color: var(--couleur-principal);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.weak {
+    color: #aaa
+}
+
+#article_1_film_detail {
+    margin-bottom: 3em;
+    display: flex;
+    flex-direction: row;
+}
+
+#article_2_film_detail {
+    flex-direction: column;
+    margin-bottom: 1em;
+}
+
+#article_2_film_detail div {
+    margin: 1em;
+}
+
+#affiche_film_detail {
+    height: 15em;
+}
+
+#titre_note {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#titre_note h2 {
+    margin-left: 0;
+}
+
+#infos_pricipales {
+    margin-left: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.section-reco {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#row-reco {
+    padding: 0.5em;
+    width: 95%;
+}
+
+#bouton_reco {
+    display: flex;
+    justify-content: center;
+}
+
+.people {
+    background-color: transparent;
+    color: #fff;
+    border-radius: 5px;
+    margin-right: 0.5em;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+.people:hover {
+    background-color: var(--principale-sombre);
+}
+
+#div_acteurs, #div_autres_intervenants {
+    margin-left: 2em;
+}
+
+#div_autres_intervenants {
+    margin-bottom: 1em;
+}
+
+
+
+  
+#spinner-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #222;
+    z-index: 2;
+  }
+  
+  #spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Ajoutez le reste de vos styles pour le spinner ici */
+  }
+  
+  header {
+    z-index: 1;
+  }
+  
+  footer {
+    z-index: 1;
+  }
+  

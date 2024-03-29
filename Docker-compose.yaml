@@ -1,0 +1,64 @@
+version: '1'
+
+services:
+  flamberge_db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5601:5432
+    container_name: flamberge_db
+    environment:
+      POSTGRES_USER: 'flamberge'
+      POSTGRES_PASSWORD: 'root'
+      POSTGRES_DB: 'flamberge'
+    volumes:
+      - ./FlambergeDB/data.csv:/data.csv
+      - ./FlambergeDB/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  flamberge_api:
+    build: 
+      dockerfile: FlambergeAPI/Dockerfile
+    container_name: flamberge_api
+    restart: always
+    ports:
+      - "8081:8000"
+    depends_on:
+      - flamberge_db
+    volumes:
+      - ./FlambergeAPI/Content:/app
+
+  flamberge_web:
+    build: 
+      dockerfile: FlambergeWeb/Dockerfile
+    container_name: flamberge_web
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./FlambergeWeb/App:/app
+
+  flamberge_elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: flamberge_elasticsearch
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./FlambergeElastic/mapping.json:/usr/share/elasticsearch/config/mapping.json
+    command: 
+      - "elasticsearch"
+      - "-Expack.ml.max_open_jobs=1"
+
+  flamberge_kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.2
+    container_name: flamberge_kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://flamberge_elasticsearch:9200
+    ports:
+      - "9201:5601"
+    depends_on:
+      - flamberge_elasticsearch
+
+volumes:
+  db_data:
