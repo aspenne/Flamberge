@@ -1,0 +1,8 @@
+{
+  "mappings": {
+    "properties": {
+      "idGenre": { "type": "integer" },
+      "idFilm": { "type": "integer" }
+    }
+  }
+}

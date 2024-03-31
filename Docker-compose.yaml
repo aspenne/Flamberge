@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - 5601:5432
+    expose:
+      - "5432"
     container_name: flamberge_db
     environment:
       POSTGRES_USER: 'flamberge'
@@ -37,28 +39,52 @@ services:
     volumes:
       - ./FlambergeWeb/App:/app
 
-  flamberge_elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
-    container_name: flamberge_elasticsearch
+  flamberge-elasticsearch:
+    build: 
+      dockerfile: FlambergeElastic/Dockerfile
+    container_name: flamberge-elasticsearch
     environment:
       - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
     ports:
       - "9200:9200"
-    volumes:
-      - ./FlambergeElastic/mapping.json:/usr/share/elasticsearch/config/mapping.json
     command: 
       - "elasticsearch"
       - "-Expack.ml.max_open_jobs=1"
 
+  flamberge_elasticsearch_mapping:
+    build:
+      dockerfile: ./FlambergeElastic/mapping/Dockerfile
+    container_name: flamberge_elasticsearch_mapping
+    depends_on:
+      - flamberge-elasticsearch
+
   flamberge_kibana:
-    image: docker.elastic.co/kibana/kibana:7.10.2
+    image: docker.elastic.co/kibana/kibana:7.17.10
     container_name: flamberge_kibana
     environment:
-      - ELASTICSEARCH_HOSTS=http://flamberge_elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://flamberge-elasticsearch:9200
     ports:
       - "9201:5601"
     depends_on:
-      - flamberge_elasticsearch
+      - flamberge-elasticsearch
+
+  logstash:
+    container_name: flamberge_logstash
+    build: 
+      dockerfile: ./FlambergeLogstash/Dockerfile
+    ports:
+      - "9202:5000"
+    environment:
+      - CONFIG_SUPPORT_ESCAPE=true
+      - ELASTICSEARCH_URL=http://flamberge_elasticsearch:9200
+      - XPACK_MONITORING_ENABLED=false
+    depends_on:
+      - flamberge-elasticsearch
+      - flamberge_db
+
 
 volumes:
   db_data:

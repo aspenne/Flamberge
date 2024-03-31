@@ -1,0 +1,8 @@
+{
+  "mappings": {
+    "properties": {
+      "idMetier": { "type": "integer" },
+      "nomMetier": { "type": "text" }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "mappings": {
+    "properties": {
+      "idArtiste": { "type": "integer" },
+      "nomArtiste": { "type": "text" }
+    }
+  }
+}
