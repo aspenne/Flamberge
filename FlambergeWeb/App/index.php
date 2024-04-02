@@ -18,6 +18,7 @@
   <?php require("./header.php") ?>
   <main>
     <section class="laUne">
+      <!-- Le caroussel -->
       <div class="carousel">
         <input type="radio" id="carousel-css-slide-1" name="carousel-css" value="slide-1" checked />
         <input type="radio" id="carousel-css-slide-2" name="carousel-css" value="slide-2" />
@@ -34,8 +35,7 @@
           $numberOfCarouselSlides = 4;
 
           for ($i = 0; $i < $numberOfCarouselSlides; $i++) {
-            $max = getNumberFilms();
-            $film = getFilmById(rand(1, $max['count'])); // Replace with your function to get film details
+            $film = getFilmVotes4(); // Sort 4 films avec plus de 300 000 votes pour le carroussel
           ?>
             <div class="carousel-slide">
               <?php
