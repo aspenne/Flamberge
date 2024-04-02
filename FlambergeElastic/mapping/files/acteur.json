@@ -1,7 +1,7 @@
 {
   "mappings": {
     "properties": {
-      "idArtiste": { "type": "integer" },
+      "idActeur": { "type": "integer" },
       "nomArtiste": { "type": "text" }
     }
   }

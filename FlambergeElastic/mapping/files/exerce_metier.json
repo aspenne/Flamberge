@@ -1,8 +1,0 @@
-{
-  "mappings": {
-    "properties": {
-      "idMetier": { "type": "integer" },
-      "idArtiste": { "type": "integer" }
-    }
-  }
-}
