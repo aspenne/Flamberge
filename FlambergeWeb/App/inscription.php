@@ -13,13 +13,12 @@
     #password-requirements {
       position: absolute;
       background-color: #fff;
-      bottom: 1em;
       border: 1px solid #ccc;
       padding: 5px 10px;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       color: black;
-      width: 110%;
+      width: 125%;
     }
   </style>
   <link rel="stylesheet" href="style.css">
