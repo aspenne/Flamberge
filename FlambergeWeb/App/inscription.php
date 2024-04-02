@@ -38,6 +38,10 @@
       <label for="email">Email* :</label>
       <input type="email" name="email" id="email" required>
     </div>
+    <div>
+      <label for="naissance">Date de naissance* :</label>
+      <input type="date" name="naissance" id="naissance" required>
+    </div>
       <div class="password-container">
         <label for="password">Mot de passe* :</label>
         <input type="password" name="password" id="password" required oninput="displayPasswordRequirements()">
