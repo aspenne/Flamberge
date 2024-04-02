@@ -27,7 +27,7 @@ CREATE TABLE flamberge_V2._metier (
     nomMetier VARCHAR(255)
 );
 
-CREATE TABLE flamberge_V2.utilisateur(
+CREATE TABLE flamberge_V2._utilisateur(
   idUser SERIAL PRIMARY KEY,
   email VARCHAR(300) NOT NULL,
   mdp VARCHAR(300) NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE flamberge_V2._possede_genre (
 
 -- Fonctions
 
-CREATE OR REPLACE FUNCTION encrypt_password() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION flamberge_V2.encrypt_password() RETURNS TRIGGER AS $$
 BEGIN
   NEW.mdp = crypt(NEW.mdp, gen_salt('md5'));
   RETURN NEW;
@@ -76,9 +76,9 @@ $$ LANGUAGE plpgsql;
 -- Triggers
 CREATE TRIGGER ins_user 
 BEFORE INSERT 
-ON flamberge_V2.utilisateur 
+ON flamberge_V2._utilisateur 
 FOR EACH ROW 
-EXECUTE FUNCTION encrypt_password();
+EXECUTE FUNCTION flamberge_V2.encrypt_password();
 
 -- Peuplement
 
