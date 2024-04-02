@@ -663,6 +663,6 @@ article:last-child {
     width: 90%;
 }
 
-/*------------------------*/
-/* Connexion              */
-/*------------------------*/
+#inscription_form a:visited, #connexion_form a:visited{
+    color: var(--couleur-secondaire);
+}
