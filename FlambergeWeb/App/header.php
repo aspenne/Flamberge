@@ -23,6 +23,19 @@
         <a href="documentation.php">
             <div>Documentation</div>
         </a>
+        <?php if (($_SERVER["REQUEST_URI"] != "/profil.php")&&($_SERVER["REQUEST_URI"] != "/connexion.php")&&($_SERVER["REQUEST_URI"] != "/inscription.php")) {
+             if (isset($_SESSION["user"])){ ?> 
+            <a href="profil.php">
+                <section><?= $_SESSION["user"]["email"] ?></section>
+            </a>
+            <a href="deconnexion.php">
+                <section>Déconnexion</section>
+            </a>
+        <?php } else { ?>
+            <a href="connexion.php">
+                <section>Connexion</section>
+            </a>
+        <?php } }?>
     </nav>
     <div class="burger-menu" onclick="toggleMenu()">
         <div class="bar"></div>
