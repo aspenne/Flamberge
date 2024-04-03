@@ -24,8 +24,8 @@
         <input type="email" name="email" id="email" required>
       </div>
       <div>
-        <label for="password">Mot de passe* : </label>
-        <input type="password" name="password" id="password" required>
+        <label for="mdp">Mot de passe* : </label>
+        <input type="password" name="mdp" id="mdp" required>
       </div>
       
       <p>Pas encore de compte ? <a href="inscription.php">Inscrivez-vous</a></p>

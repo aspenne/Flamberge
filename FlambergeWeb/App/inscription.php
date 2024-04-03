@@ -33,7 +33,7 @@
   <?php require("./header.php") ?>
   <main>
     <h1>Inscription</h1>
-    <form action="createCompte.php" method="post" onsubmit="return validateForm()" id="inscription_form">
+    <form action="compte.php" method="post" onsubmit="return validateForm()" id="inscription_form">
     <div>
       <label for="email">Email* :</label>
       <input type="email" name="email" id="email" required>
