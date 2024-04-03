@@ -24,11 +24,11 @@
             <div>Documentation</div>
         </a>
         <?php if (($_SERVER["REQUEST_URI"] != "/profil.php")&&($_SERVER["REQUEST_URI"] != "/connexion.php")&&($_SERVER["REQUEST_URI"] != "/inscription.php")) {
-             if (isset($_SESSION["user"])){ ?> 
+            if (isset($_SESSION["user"]["email"])){ ?> 
             <a href="profil.php">
-                <section><?= $_SESSION["user"]["email"] ?></section>
+                <img src="./images/account.png" alt="Profil" style="height: 60%; margin-top: 35%;">
             </a>
-            <a href="deconnexion.php">
+            <a href="logout.php">
                 <section>Déconnexion</section>
             </a>
         <?php } else { ?>

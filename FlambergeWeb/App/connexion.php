@@ -17,7 +17,7 @@
   <?php require("./header.php") ?>
   <main>
     
-    <form action="connexion.php" method="post" id="connexion_form">
+    <form action="compte.php" method="post" id="connexion_form">
       <h1>Connexion</h1>
       <div>
         <label for="email">Email* : </label>

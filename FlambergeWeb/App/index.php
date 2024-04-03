@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -28,7 +29,6 @@
         <label for="carousel-css-slide-2" data-value="slide-2"></label>
         <label for="carousel-css-slide-3" data-value="slide-3"></label>
         <label for="carousel-css-slide-4" data-value="slide-4"></label>
-
         <div class="carousel-wrapper">
           <?php
           $numberOfCarouselSlides = 4;
