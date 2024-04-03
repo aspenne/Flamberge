@@ -1,10 +1,10 @@
 import psycopg2
 
 conn = psycopg2.connect(
-    host='flamberge_db',
+    host='localhost',
     database='flamberge',
     user='flamberge',
-    port=5432,
+    port=5601,
     password='root')
 
 schema = "flamberge_v2"
