@@ -1,5 +1,7 @@
 <?php
 
+use Elasticsearch\ClientBuilder;
+
 try {
     include('./connect.php');
     $dbh = new PDO("$driver:host=$server;port=$port;dbname=$dbname", $user, $pass);
@@ -43,6 +45,51 @@ function getFilmVotes4() {
     $films = $sth -> fetchAll();
     
     return $films[0];
+}
+
+function getBestFilmsByNote(){
+    // renvoie une liste de 4 films avec plus de 300 000 votes
+    global $dbh;
+    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where nbVotes >= 3000 order by note DESC limit 10');
+    $sth -> execute(array());
+    $films = $sth -> fetchAll();
+    
+    return $films;
+}
+
+function getBestFilmsByNoteFromElastic() {
+    $client = ClientBuilder::create()->build();
+
+    // Définissez votre requête Elasticsearch pour récupérer les films
+    $params = [
+        'index' => 'votre_index',
+        'body' => [
+            'query' => [
+                'bool' => [
+                    'filter' => [
+                        'range' => [
+                            'nbVotes' => ['gte' => 3000] // "gte" signifie "greater than or equal to"
+                        ]
+                    ]
+                ]
+            ],
+            'sort' => [
+                'note' => ['order' => 'desc'] // Tri par ordre décroissant de la note
+            ],
+            'size' => 10 // Limite de résultats à 10
+        ]
+    ];
+
+    // Exécutez la requête Elasticsearch
+    $response = $client->search($params);
+
+    // Récupérez les résultats de la recherche
+    $films = [];
+    foreach ($response['hits']['hits'] as $hit) {
+        $films[] = $hit['_source'];
+    }
+
+    return $films;
 }
 
 ?>

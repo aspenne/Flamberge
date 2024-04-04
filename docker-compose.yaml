@@ -24,8 +24,6 @@ services:
     restart: always
     ports:
       - "8081:8000"
-    depends_on:
-      - flamberge_db
     volumes:
       - ./FlambergeAPI/Content:/app
 

@@ -13,7 +13,6 @@
   <link href='https://fonts.googleapis.com/css?family=Biryani' rel='stylesheet'>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21"></script>
-  <script src="./sidescroll.js"></script>
   <!-- Swiper JS -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -80,8 +79,8 @@
               <?php
               if ($film['isadult'] == 1) {
                 $affiche = "./images/poster_moins_18.png";
-              } else if ($film['poster'] == '\N') {
-                $affiche = "./images/poster_sans_film.png";
+              } else if (!str_starts_with($film['poster'], 'http')) {
+                $affiche = "./images/no_image_available.jpeg";
               } else {
                 $affiche = $film['poster'];
               }
@@ -103,13 +102,15 @@
     </section>
 
 
-
+      <h1 style="align-self: start; margin: 0 10%"> Film les mieux notés</h1>
 
     <section class="film film-section" id="row-2">
       <?php
       // Loop through your existing movies to create placeholders
-      for ($i = 0; $i < 20; $i++) { // Adjust the number as needed
-        $film = getFilmById(rand(1, $max['count'])); // Replace with your function to get movie details
+      $films = getBestFilmsByNote();
+      foreach ($films as $film) { // Adjust the number as needed
+        
+        //$film = getFilmById(rand(1, $max['count'])); // Replace with your function to get movie details
       ?>
         <a href="details_film.php?idFilm=<?php echo $film["idfilm"]; ?>">
           <article>
@@ -117,8 +118,8 @@
             <?php
               if ($film['isadult'] == 1) {
                 $affiche = "./images/poster_moins_18.png";
-              } else if ($film['poster'] == '\N') {
-                $affiche = "./images/poster_sans_film.png";
+              } else if (!str_starts_with($film['poster'], 'http')) {
+                $affiche = "./images/no_image_available.jpeg";
               } else {
                 $affiche = $film['poster'];
               }

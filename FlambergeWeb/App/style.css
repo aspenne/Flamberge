@@ -466,7 +466,7 @@ article:last-child {
     display: flex;
     border: none;
     box-shadow: none;
-    overflow-x: hidden;
+    overflow-x: scroll;
     /* Hide the horizontal scrollbar */
     padding: 20px;
     /* Adjusted as needed */
