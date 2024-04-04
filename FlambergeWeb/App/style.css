@@ -314,11 +314,6 @@ section h2 {
     margin-left: 2em;
 }
 
-section p,
-section h4 {
-    margin-left: 1em;
-}
-
 section h4 {
     font-weight: 800;
 }
@@ -514,9 +509,17 @@ article:last-child {
 .img {
     background-color: #FFF;
     width: auto;
-    height: 100%;
-    height: max-content;
+    height: 40rem;
     align-self: center;
+    margin-bottom: 450px;
+    filter: brightness(1);
+    transition: 0.75s all ease-out;
+}
+
+.img:hover {
+    margin-bottom: 0;
+    filter: brightness(0.4);
+    transition: 0.75s all ease-out;
 }
 
 .img a img {
@@ -526,15 +529,19 @@ article:last-child {
 }
 
 .description {
+    position: relative;
+    top: -450px;
     color: #FFF;
-    background-color: #000;
-    height: 100%;
-    width: 50%;
+    background-color: #ffffff00;
+    height: auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
+    text-align: center;
     padding: 1em !important;
     text-decoration: none;
+    pointer-events: none;
 }
 
 .description h4 {
