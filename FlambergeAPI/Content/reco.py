@@ -6,7 +6,7 @@ import pandas as pd
 import math
 from connect import vecteurs_path
 from connect import clusters_path
-
+import Levenshtein
 
 cur = conn.conn.cursor()
 
@@ -119,9 +119,13 @@ def list_film_potentielle(id_i, genre_i):
 
 
 def compare_attributs(film_i, film2):
+    
+    distance = Levenshtein.distance(film_i['titre'], film2['titre'])
+    #normalise la valeur de lenvenshitein entre 0 et 1 (0 très proche et 1 très eloigné)
+    similarite = 1 - (distance / max(len(film_i['titre'], film2['titre'])))
     # Comparaison des attributs titre, année de sortie, note et isAdult
     attributs_similaires = {
-        'titre': 3 if film_i['titre'] == film2['titre'] else 0,
+        'titre': 2/similarite if similarite !=0 else 20,
         'anneeSortie': 1 if film_i['anneeSortie'] == film2['anneeSortie'] else 0,
         'note': 2*film2['note'] if film_i['note'] <= film2['note'] else 0,
         'isAdult': 1 if (film_i['isAdult'] == 0 and film2['isAdult'] == 0) or (film_i['isAdult'] > 0 and film2['isAdult'] > 0) else 0
@@ -149,26 +153,6 @@ def compare_attributs(film_i, film2):
     ]
     
     return matrice_correlation
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def sim_jaccard(A,B) : 

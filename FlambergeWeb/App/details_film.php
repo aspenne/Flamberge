@@ -55,9 +55,9 @@
 
     <section class="section-reco">
       <div name="div_reco"><button class="button" id="reco">Recommande moi des films</button></div>
-      <div id="spinner-reco"> <!-- Div pour le spinner -->
-        <img id="spinner" class="spinner" src="/images/spinner.gif" alt="Chargement en cours">
-      </div>
+        <div id="spinner-reco">
+         <img id="spinner" class="spinner" src="/images/spinner.gif" alt="Chargement en cours"> 
+       </div> 
       <h3>Recommandations</h3>
       <div class="film film-section" id="row-reco">
         <script> loadRecommandation(); </script>
