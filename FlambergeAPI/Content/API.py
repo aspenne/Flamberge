@@ -7,6 +7,7 @@ import Donnees
 import Cluster
 import Recherche
 import IA_vecteur
+import reco
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -45,7 +46,7 @@ def update():
 # Retourne les recommandations d'un film avec le clustering
 @app.get("/recommendations/{id_film}")
 def read_recommendation(id_film: int):
-    recommendations_data = Recommendation.getRecommendation(id_film)
+    recommendations_data = reco.getRecommendation(id_film)
     
     if isinstance(recommendations_data, str):
         # Si il y a un message d'erreur de getRecommendation()
@@ -54,19 +55,22 @@ def read_recommendation(id_film: int):
         # print(recommendations_data)
         # Récupère les données et stock les données sous forme de dictionnaire
         recommendations_list = []
-        for id, row in recommendations_data.iterrows():
+        for idfilm in recommendations_data:
+            recommendations = Donnees.getFilmById(idfilm)
+            print(recommendations[0])
+            
             recommendation_dict = {
-                "idFilm" : id,
-                "titre": str(row["titre"]),
-                "isAdult" : row["isAdult"],
-                "anneeSortie": row["anneeSortie"],
-                'poster': row["poster"],
-                'description': row["description"],
-                'dureeMinutes': row["dureeMinutes"],
-                "note": row["note"],
-                "nbVotes": row["nbVotes"],
-                "nomGenre": row["nomGenre"]
+                "idFilm" : idfilm,
+                "titre": recommendations[0]["titre"],
+                "isAdult" : recommendations[0]["isAdult"],
+                "anneeSortie": recommendations[0]["anneeSortie"],
+                'poster': recommendations[0]["poster"],
+                'description': recommendations[0]["description"],
+                'dureeMinutes': recommendations[0]["dureeMinutes"],
+                "note": recommendations[0]["note"],
+                "nbVotes": recommendations[0]["nbVotes"],
             }
+            print(recommendation_dict)
             recommendations_list.append(recommendation_dict)
         
         # Creation d'un dictionnaire avec les recommendations
@@ -168,6 +172,8 @@ def read_film(id_film: int):
         }
         
         return JSONResponse(content=result_dict, media_type="application/json", status_code=200)
+
+
 
 
 # Retourne la fiche complète d'un film

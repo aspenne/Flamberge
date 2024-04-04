@@ -119,6 +119,13 @@ def autresArtistes(id_film):
     else:
         return "Aucun film ne possède cet identifiant"
 
+def getFilmById(id_film):
+    if id_film in films['idFilm']:
+        film = films[films['idFilm'] == id_film]
+        return film.to_dict(orient="records")
+    else:
+        return "Aucun film ne possède cet identifiant"
+
 def getFilmComplet(id_film):
     if id_film in films['idFilm']:
         film = films[films['idFilm'] == id_film]
@@ -172,6 +179,8 @@ def getFilmsAvecRealisateur(id_real):
         
     else:
         return "Aucun artiste ne possède cet identifiant."
+    
+
     
 # real = Christopher Nolan
 # print(getFilmsAvecRealisateur(55470))

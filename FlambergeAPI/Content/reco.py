@@ -6,22 +6,23 @@ import pandas as pd
 import math
 from connect import vecteurs_path
 from connect import clusters_path
-import distance
+
 
 cur = conn.conn.cursor()
 
-def init():
+def getRecommendation(idfilm):
     
-    film_i = info_film_select('The Voyager')
+    film_i = info_film_select(idfilm)
     # print(film_i)
     #penser au try catch pour les cas de film genres
     premier_genre = list(film_i['genres'][0])[0]
     # print(film_i['id'], premier_genre)
     # print(list_film_potentielle(film_i['id'], premier_genre))
     tab = list_film_potentielle(film_i['id'], premier_genre)
-    # print(len(tab))
+    # print(tab)
     # print(list(tab[1])[0])
     film2 = []
+    
     # for i in range(len(tab)):
     for i in range(100):
        film2.append(info_film_select(list(tab[i])[0]))
@@ -50,12 +51,12 @@ def init():
 
     tableau_similarite_trie = sorted(tab_similarite, key=lambda x: x[1], reverse=True)
     
-    tableau_final = []
-    print(tableau_similarite_trie)
+    
+    # print(tableau_similarite_trie)
     # print(sim_cos([3, 1, 2, 1, 12, 2], [0, 0, 2, 1, 0, 2]))
     
     list_id_film = [t[0] for t in tableau_similarite_trie[:20]]
-    print(list_id_film)
+    # print(list_id_film)
     
     return list_id_film
 
@@ -63,9 +64,9 @@ def init():
 schema = "set schema 'flamberge_v2'"
 cur.execute(schema)
 
-def info_film_select(nom_film_selectionne) :
+def info_film_select(id_film_selectionne) :
 
-    sql_film = "select idfilm, titre, anneesortie, note, isadult from _film  where titre = '"+nom_film_selectionne +"'"
+    sql_film = "select idfilm, titre, anneeSortie, note, isadult from _film  where idfilm = '"+str(id_film_selectionne) +"'"
     # print(sql_film)
     cur.execute(sql_film)
     res_film = cur.fetchall()
@@ -108,7 +109,7 @@ def info_film_select(nom_film_selectionne) :
 
 def list_film_potentielle(id_i, genre_i):
     #On filtre sur le genre pour éviter d'avoir trop de resultat. On perd de l'information surement mais on évite trop de ralentissement
-    sql = "SELECT f.titre from _film f inner join _possede_genre pg on f.idfilm = pg.idfilm inner join _genre g on pg.idgenre = g.idgenre where pg.idfilm <> " + str(id_i) +" and nomgenre = '"+genre_i +"' and f.note > 2.5 and f.nbvotes > 50"
+    sql = "SELECT f.idfilm from _film f inner join _possede_genre pg on f.idfilm = pg.idfilm inner join _genre g on pg.idgenre = g.idgenre where pg.idfilm <> " + str(id_i) +" and nomgenre = '"+genre_i +"' and f.note > 2.5 and f.nbvotes > 50"
     # print(sql)
     cur.execute(sql)
     res = cur.fetchall()
@@ -228,6 +229,5 @@ def prediction_item(A,B) :
 
 
 
-init()
+getRecommendation(626)
 
-cur.close()

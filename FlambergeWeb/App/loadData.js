@@ -463,7 +463,7 @@ function loadRecommandationSimilarite() {
   let xhr = new XMLHttpRequest();
   xhr.open(
     "GET",
-    "http://localhost:8081/recommendations/similarite/" + idFilm,
+    "http://localhost:8081/recommendations/" + idFilm, /*similarite/*/
     true
   );
   xhr.onload = function () {
