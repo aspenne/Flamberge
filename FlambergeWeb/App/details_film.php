@@ -35,7 +35,7 @@
           <div id="div_button_genres">
             
           </div>
-          <div id="annee">Année</div>
+          <div id="annee"> Aucune année fournie </div>
         </div>
       </article>
       <article id="article_2_film_detail">

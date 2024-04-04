@@ -10,15 +10,15 @@ create table flamberge_v2._film(
     poster VARCHAR(250),
     description VARCHAR(1000),
     isadult INTEGER,
-    dureeminutes VARCHAR(10),
+    dureeMinutes VARCHAR(10),
     note FLOAT,
-    nbvotes INTEGER
+    nbVotes INTEGER
 );
 
-DROP TABLE IF EXISTS flamberge_v2._acteur;
-create table flamberge_v2._acteur(
-	idActeur SERIAL primary key,
-	nomartiste Varchar(250)
+DROP TABLE IF EXISTS flamberge_v2._artiste;
+create table flamberge_v2._artiste(
+	idArtiste SERIAL primary key,
+	nomArtiste Varchar(250)
 );
 
 DROP TABLE IF EXISTS flamberge_v2._role;
@@ -27,43 +27,43 @@ create table flamberge_v2._role(
 	nomRole Varchar(250)
 );
 
-DROP TABLE IF EXISTS flamberge_v2._genres;
-create table flamberge_v2._genres(
+DROP TABLE IF EXISTS flamberge_v2._genre;
+create table flamberge_v2._genre(
 	idGenre Serial primary key,
-	nomgenre Varchar(250)
+	nomGenre Varchar(250)
 );
 
 DROP TABLE IF EXISTS flamberge_v2.temp_csv_data;
 CREATE TABLE flamberge_v2.temp_csv_data (
-    isadult INTEGER,
+    isAdult INTEGER,
     titre VARCHAR(250),
     poster VARCHAR(250),
     description VARCHAR(1000),
     anneesortie INTEGER,
-    dureeminutes VARCHAR(10),
-    genres VARCHAR(250),
+    dureeMinutes VARCHAR(10),
+    genre VARCHAR(250),
     note FLOAT,
-    nbvotes INTEGER,
+    nbVotes INTEGER,
     role VARCHAR(250),
-    nomartiste VARCHAR(250),
+    nomArtiste VARCHAR(250),
     metiers VARCHAR(250)
 );
 
-COPY flamberge_v2.temp_csv_data(isadult, titre, poster, description, anneesortie, dureeminutes, genres, note, nbvotes, role, nomartiste, metiers) 
+COPY flamberge_v2.temp_csv_data(isadult, titre, poster, description, anneesortie, dureeMinutes, genre, note, nbVotes, role, nomArtiste, metiers) 
 FROM '/data.csv'
 WITH (FORMAT CSV, HEADER, DELIMITER ';', NULL '');
 
 
-INSERT INTO flamberge_v2._film (titre, anneesortie, poster, description, isadult, dureeminutes, note, nbvotes)
-  SELECT DISTINCT titre, anneesortie, poster, description, isadult, dureeminutes, note, nbvotes
+INSERT INTO flamberge_v2._film (titre, anneesortie, poster, description, isadult, dureeMinutes, note, nbVotes)
+  SELECT DISTINCT titre, anneesortie, poster, description, isadult, dureeMinutes, note, nbVotes
   FROM flamberge_v2.temp_csv_data;
 
 --import de données dans .flamberge_v2._role--------------------------------
 
 --temp_ma_table(nom de la ou les colonnes du csv)
 
-INSERT INTO flamberge_v2._acteur(nomartiste)
-SELECT DISTINCT trim(unnest(string_to_array(nomartiste, ',')))
+INSERT INTO flamberge_v2._artiste(nomArtiste)
+SELECT DISTINCT trim(unnest(string_to_array(nomArtiste, ',')))
 FROM flamberge_v2.temp_csv_data;
 
 INSERT INTO flamberge_v2._role(nomrole)
@@ -76,50 +76,45 @@ FROM flamberge_v2.temp_csv_data;
 --import de données dans genre--------------------------------------------------------
 
 
-INSERT INTO flamberge_v2._genres(nomgenre)
-SELECT DISTINCT trim(unnest(string_to_array(genres, ',')))
+INSERT INTO flamberge_v2._genre(nomgenre)
+SELECT DISTINCT trim(unnest(string_to_array(genre, ',')))
 FROM flamberge_v2.temp_csv_data;
 
-DROP TABLE IF EXISTS flamberge_v2._possede_genres;
-CREATE TABLE flamberge_v2._possede_genres (
-    idfilm INT,
-    idgenre INT,
-    PRIMARY KEY (idfilm, idgenre),
-    CONSTRAINT FK_assos_film FOREIGN KEY (idfilm) REFERENCES flamberge_v2._film(idfilm),
-    CONSTRAINT FK_assos_genre FOREIGN KEY (idgenre) REFERENCES flamberge_v2._genres(idgenre)
+DROP TABLE IF EXISTS flamberge_v2._possede_genre;
+CREATE TABLE flamberge_v2._possede_genre (
+    idFilm INT,
+    idGenre INT,
+    PRIMARY KEY (idFilm, idGenre),
+    CONSTRAINT FK_assos_film FOREIGN KEY (idFilm) REFERENCES flamberge_v2._film(idFilm),
+    CONSTRAINT FK_assos_genre FOREIGN KEY (idGenre) REFERENCES flamberge_v2._genre(idGenre)
 );
 
 
 
-INSERT INTO flamberge_v2._possede_genres (idfilm, idgenre) 
-SELECT DISTINCT f.idfilm, g.idgenre
+INSERT INTO flamberge_v2._possede_genre (idFilm, idGenre) 
+SELECT DISTINCT f.idFilm, g.idGenre
 FROM flamberge_v2.temp_csv_data csv
 JOIN flamberge_v2._film f ON csv.titre = f.titre
-JOIN flamberge_v2._genres g ON g.nomgenre = ANY(string_to_array(csv.genres, ','));
+JOIN flamberge_v2._genre g ON g.nomgenre = ANY(string_to_array(csv.genre, ','));
 
 
 DROP TABLE IF EXISTS flamberge_v2._joue_dans;
 create table flamberge_v2._joue_dans(
-	idActeur int,
+	idArtiste int,
 	idFilm int,
 	idRole int,
-	primary key (idActeur, idFilm, idRole),
-    CONSTRAINT FK_assos_film FOREIGN KEY (idfilm) REFERENCES flamberge_v2._film(idfilm),
-    CONSTRAINT FK_assos_acteur FOREIGN KEY (idacteur) REFERENCES flamberge_v2._acteur(idacteur),
-    CONSTRAINT FK_assos_role FOREIGN KEY (idrole) REFERENCES flamberge_v2._role(idrole)
+	primary key (idArtiste, idFilm, idRole),
+    CONSTRAINT FK_assos_film FOREIGN KEY (idFilm) REFERENCES flamberge_v2._film(idFilm),
+    CONSTRAINT FK_assos_artiste FOREIGN KEY (idArtiste) REFERENCES flamberge_v2._artiste(idArtiste),
+    CONSTRAINT FK_assos_role FOREIGN KEY (idRole) REFERENCES flamberge_v2._role(idRole)
 );
 
-INSERT INTO flamberge_v2._joue_dans(idFilm, idRole, idActeur)
-SELECT DISTINCT f.idfilm, r.idrole, a.idacteur
+INSERT INTO flamberge_v2._joue_dans(idFilm, idRole, idArtiste)
+SELECT DISTINCT f.idFilm, r.idRole, a.idArtiste
 FROM flamberge_v2.temp_csv_data csv
 JOIN flamberge_v2._film f ON csv.titre = f.titre
-JOIN flamberge_v2._acteur a ON csv.nomartiste = a.nomartiste  
+JOIN flamberge_v2._artiste a ON csv.nomArtiste = a.nomArtiste  
 JOIN flamberge_v2._role r ON r.nomrole = ANY(string_to_array(csv.metiers, ','));
 
 
 DROP TABLE flamberge_v2.temp_csv_data;
-
-
-
-
-

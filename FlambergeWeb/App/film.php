@@ -17,7 +17,7 @@ try {
 function getFilmById($id){
     // la fonction qui récupère simplement un film en fonction de son id
     global $dbh;
-    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where idfilm = ?');
+    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where idFilm = ?');
     $sth -> execute(array($id));
     $films = $sth -> fetchAll();
 
@@ -28,7 +28,7 @@ function getFilmById($id){
 function getNumberFilms(){
     // la fonction qui récupère simplement un film en fonction de son id
     global $dbh;
-    $sth = $dbh->prepare('SELECT count (idfilm) from flamberge_V2._film');
+    $sth = $dbh->prepare('SELECT count (idFilm) from flamberge_V2._film');
     $sth -> execute(array());
     $max = $sth -> fetchAll();
 
