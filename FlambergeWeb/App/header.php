@@ -81,7 +81,7 @@
                 const imageElement = document.createElement('img');
                 imageElement.classList.add('suggestionImage');
                 if (!suggestion._source.poster.startsWith('http')){
-                    imageElement.src = '../images/no_image_available.jpeg';
+                    imageElement.src = '../images/poster_sans_film.png';
                 } else {
                     imageElement.src = suggestion._source.poster;
                 }

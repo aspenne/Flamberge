@@ -83,7 +83,7 @@
               if ($film['isadult'] == 1) {
                 $affiche = "./images/poster_moins_18.png";
               } else if (!str_starts_with($film['poster'], 'http')) {
-                $affiche = "./images/no_image_available.jpeg";
+                $affiche = "./images/poster_sans_film.png";
               } else {
                 $affiche = $film['poster'];
               }
@@ -122,7 +122,7 @@
               if ($film['isadult'] == 1) {
                 $affiche = "./images/poster_moins_18.png";
               } else if (!str_starts_with($film['poster'], 'http')) {
-                $affiche = "./images/no_image_available.jpeg";
+                $affiche = "./images/poster_sans_film.png";
               } else {
                 $affiche = $film['poster'];
               }

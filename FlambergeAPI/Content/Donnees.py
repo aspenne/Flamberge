@@ -47,8 +47,14 @@ def init():
     joue_dans.columns = ['idArtiste', 'idFilm', 'idRole']
 
     # Films-Genres
-    genres = pd.merge(possede_genres, genres, on='idGenre')
-    films_genres = pd.merge(genres, films, on='idFilm')
+    query = """
+    SELECT f.idFilm, f.titre, f.anneeSortie, f.poster, f.description, f.isAdult, f.dureeMinutes, f.note, f.nbVotes, g.idGenre, g.nomGenre
+    FROM flamberge_v2._film f
+    JOIN flamberge_v2._possede_genre pg ON f.idFilm = pg.idFilm
+    JOIN flamberge_v2._genre g ON pg.idGenre = g.idGenre;"""
+    cur.execute(query)
+
+    films_genres = pd.DataFrame(cur.fetchall(), columns=['idFilm', 'titre', 'anneeSortie', 'poster', 'description', 'isAdult', 'dureeMinutes', 'note', 'nbVotes', 'idGenre', 'nomGenre'])
 
     film_with_id_role = pd.merge(joue_dans, films, on='idFilm')
     films_roles = pd.merge(film_with_id_role, roles, on='idRole')
@@ -128,14 +134,9 @@ def getFilmById(id_film):
 
 def getFilmComplet(id_film):
     if id_film in films['idFilm']:
-        film = films[films['idFilm'] == id_film]
-                
-        genresFilm = films_genres[films_genres['idFilm'] == id_film]['nomGenre'].to_list()
-        
+        film = films[films['idFilm'] == id_film]        
         filmComplet = film.to_dict(orient="records")
-        possede_genres = pd.merge(films, genres, on='idFilm')
-        filmComplet[0]['genres'] = possede_genres[possede_genres['idFilm'] == id_film]['idFilm'].to_list()
-        # filmComplet[0]['artistes'] = {"Acteurs/actrices": getActeurs(id_film)["idArtiste","nomArtiste"], "Réalisateur": getRealisateurs(id_film)["idArtiste","nomArtiste"], "Autres": autresArtistes(id_film)}
+        filmComplet[0]['genres'] = films_genres[films_genres['idFilm'] == id_film]['nomGenre'].to_list()
         filmComplet[0]['artistes'] = {"Acteurs": getActeurs(id_film), "Réalisateur": getRealisateurs(id_film), "Autres": autresArtistes(id_film)}
         return filmComplet
     else:

@@ -6,6 +6,14 @@ function hideLoadingSpinner() {
   document.getElementById("spinner-overlay").style.display = "none";
 }
 
+function showLoadingSpinnerReco() {
+  document.getElementById("spinner-reco").style.display = "block";
+}
+
+function hideLoadingSpinnerReco() {
+  document.getElementById("spinner-reco").style.display = "none";
+}
+
 function getFilmIdFromUrl() {
   // Récupère la chaîne de requête de l'URL
   var queryString = window.location.search;
@@ -120,7 +128,7 @@ function addData(film) {
   //console.log(film.poster)
   if (film.isAdult == 1) {
     img.src = "./images/poster_moins_18.png";
-  } else if (film.poster != "\\N") {
+  } else if (film.poster.startsWith("http")) {
     img.src = film.poster;
   } else {
     img.src = "./images/poster_sans_film.png";
@@ -236,13 +244,7 @@ function loadFilmDetails(userAge) {
         film.titre + " - Fiche film";
       document.getElementById("titre_details_film").innerHTML = film.titre;
       document.querySelector("title").innerHTML = film.titre + " - Fiche film";
-      document
-        .getElementById("reco_link")
-        .addEventListener("click", function (event) {
-          window.location.href =
-            "http://localhost:8080/recommandation.php?idFilm=" + film.idFilm;
-        });
-      if ((film.isAdult == 1)&&(userAge < 18)) {
+      if (film.isAdult == 1 && userAge < 18) {
         document.getElementById("affiche_film_detail").src =
           "./images/poster_moins_18.png";
       } else if (film.poster != "\\N") {
@@ -271,6 +273,7 @@ function loadFilmDetails(userAge) {
           film.note + " ★  (" + film.nbVotes + ")";
       }
 
+      console.log(film);
       for (let i = 0; i < film.genres.length; i++) {
         let genre = film.genres[i];
         let button = document.createElement("button");
@@ -460,11 +463,8 @@ function loadArtiste() {
 function loadRecommandationSimilarite() {
   let idFilm = getFilmIdFromUrl();
   let xhr = new XMLHttpRequest();
-  xhr.open(
-    "GET",
-    "http://localhost:8081/recommendations/" + idFilm, /*similarite/*/
-    true
-  );
+  showLoadingSpinnerReco();
+  xhr.open("GET", "http://localhost:8081/recommendations/" + idFilm, true);
   xhr.onload = function () {
     if (this.status == 200) {
       const obj = JSON.parse(this.responseText);
@@ -483,7 +483,6 @@ function loadRecommandationSimilarite() {
         const anchor = document.createElement("a");
         anchor.href =
           "http://localhost:8080/details_film.php?idFilm=" + film.idFilm;
-        //href="details_film.php?idFilm=${film.idFilm}"
         anchor.innerHTML = `
           <article>
             <div class="image-container">
@@ -502,48 +501,9 @@ function loadRecommandationSimilarite() {
 
         // Ajouter l'élément d'article à la section
         document.getElementById("row-reco").appendChild(anchor);
+        hideLoadingSpinnerReco();
       }
     }
   };
   xhr.send();
-}
-
-function loadRecommandationCluster() {
-  let idFilm = getFilmIdFromUrl();
-
-  let h3_recommandations = document.querySelector(".result > h3");
-
-  let xhr_1 = new XMLHttpRequest();
-  xhr_1.open("GET", "http://localhost:8081/films/" + idFilm, true);
-  xhr_1.onload = function () {
-    if (this.status == 200) {
-      const film = JSON.parse(this.responseText);
-      console.log(film.titre);
-      h3_recommandations.innerHTML =
-        "Recommandations pour le film '" + film.titre + "' :";
-
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", "http://localhost:8081/recommendations/" + idFilm, true);
-      xhr.onload = function () {
-        if (this.status == 200) {
-          const obj = JSON.parse(this.responseText);
-          var recomCluster = obj.recommendations;
-
-          if (recomCluster.length > 0) {
-            recomCluster.forEach((film) => {
-              addData(film);
-            });
-          } else {
-            displayNoResultsMessage(
-              "Aucune recommandation pour ce film :'( " + genre
-            );
-          }
-        }
-      };
-      xhr.send();
-    } else {
-      h3_recommandations.innerHTML = "Y a pas gros ";
-    }
-  };
-  xhr_1.send();
 }
