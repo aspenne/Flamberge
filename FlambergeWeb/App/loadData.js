@@ -221,7 +221,7 @@ function addData(film) {
 }
 
 // Permet de remplir la page de détails d'un film
-function loadFilmDetails(/*userAge*/) {
+function loadFilmDetails(userAge) {
   showLoadingSpinner();
   // Récupère l'id du film dans la page, et l'envoie à l'API
   let id = getFilmIdFromUrl();
@@ -243,8 +243,7 @@ function loadFilmDetails(/*userAge*/) {
           window.location.href =
             "http://localhost:8080/recommandation.php?idFilm=" + film.idFilm;
         });
-
-      if ((film.isAdult == 1)/*&&(userAge < 18)*/) {
+      if ((film.isAdult == 1)&&(userAge < 18)) {
         document.getElementById("affiche_film_detail").src =
           "./images/poster_moins_18.png";
       } else if (film.poster != "\\N") {
