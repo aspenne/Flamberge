@@ -147,7 +147,7 @@ nav a {
     align-items: stretch;
 }
 
-nav div {
+nav div, nav section {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -156,7 +156,7 @@ nav div {
     transition: background-color 0.3s;
 }
 
-nav div:hover {
+nav div:hover, nav section:hover{
     background-color: var(--principale-sombre);
 }
 
@@ -690,4 +690,27 @@ article:last-child {
 
 #div_genres a:hover {
     background-color: var(--principale-sombre);
+}
+
+/*------------------------*/
+/* Inscription            */
+/*------------------------*/
+
+#inscription_form, #connexion_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1em;
+}
+
+#inscription_form div, #connexion_form div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+    width: 90%;
+}
+
+#inscription_form a:visited, #connexion_form a:visited{
+    color: var(--couleur-secondaire);
 }

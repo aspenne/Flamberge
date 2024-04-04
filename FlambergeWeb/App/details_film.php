@@ -1,3 +1,6 @@
+<?php if (!isset($_SESSION["user"])){
+  session_start();
+}?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -48,7 +51,7 @@
       <h3>Liste des autres intervenants</h4>
       <div id="div_autres_intervenants"></div>
     </section>
-    <script>loadFilmDetails();</script>
+    <script>loadFilmDetails(<?php echo(date_diff(date_create($_SESSION["user"]["naissance"]), date_create(date("Y-m-d")))->format('%y'));?>)</script>
 
     <section class="section-reco">
       <h3>Recommandations</h3>

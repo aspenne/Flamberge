@@ -26,6 +26,19 @@
         <a href="documentation.php">
             <div>Documentation</div>
         </a>
+        <?php if (($_SERVER["REQUEST_URI"] != "/profil.php")&&($_SERVER["REQUEST_URI"] != "/connexion.php")&&($_SERVER["REQUEST_URI"] != "/inscription.php")) {
+            if (isset($_SESSION["user"]["email"])){ ?> 
+            <a href="profil.php">
+                <img src="./images/account.png" alt="Profil" style="height: 60%; margin-top: 35%;">
+            </a>
+            <a href="logout.php">
+                <section>Déconnexion</section>
+            </a>
+        <?php } else { ?>
+            <a href="connexion.php">
+                <section>Connexion</section>
+            </a>
+        <?php } }?>
     </nav>
     <div class="burger-menu" onclick="toggleMenu()">
         <div class="bar"></div>

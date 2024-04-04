@@ -1,3 +1,4 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DROP SCHEMA IF EXISTS flamberge_v2 CASCADE;
 CREATE SCHEMA flamberge_v2;
 SET SCHEMA 'flamberge_v2';    
@@ -27,11 +28,26 @@ create table flamberge_v2._role(
 	nomRole Varchar(250)
 );
 
+DROP TABLE IF EXISTS flamberge_v2._utilisateur;
+CREATE TABLE flamberge_v2._utilisateur(
+  idUser SERIAL PRIMARY KEY,
+  email VARCHAR(300) NOT NULL,
+  mdp VARCHAR(300) NOT NULL,
+  naissance DATE NOT NULL
+);
+
+DROP TABLE IF EXISTS flamberge_v2._exerce_metier;
+CREATE TABLE flamberge_v2._exerce_metier (
+    idMetier INTEGER,
+    idArtiste INTEGER,
+    CONSTRAINT metier_fk FOREIGN KEY (idMetier) REFERENCES flamberge_V2._metier(idMetier),
+    CONSTRAINT artiste_fk FOREIGN KEY (idArtiste) REFERENCES flamberge_V2._artiste(idArtiste),
+    CONSTRAINT exerce_metier_pk PRIMARY KEY (idMetier,idArtiste)
+
 DROP TABLE IF EXISTS flamberge_v2._genre;
 create table flamberge_v2._genre(
 	idGenre Serial primary key,
 	nomGenre Varchar(250)
-);
 
 DROP TABLE IF EXISTS flamberge_v2.temp_csv_data;
 CREATE TABLE flamberge_v2.temp_csv_data (
@@ -90,6 +106,19 @@ CREATE TABLE flamberge_v2._possede_genre (
 );
 
 
+CREATE OR REPLACE FUNCTION flamberge_V2.encrypt_password() RETURNS TRIGGER AS $$
+BEGIN
+  NEW.mdp = crypt(NEW.mdp, gen_salt('md5'));
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Triggers
+CREATE TRIGGER ins_user 
+BEFORE INSERT 
+ON flamberge_V2._utilisateur 
+FOR EACH ROW 
+EXECUTE FUNCTION flamberge_V2.encrypt_password();
 
 INSERT INTO flamberge_v2._possede_genre (idFilm, idGenre) 
 SELECT DISTINCT f.idFilm, g.idGenre
