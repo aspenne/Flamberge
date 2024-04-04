@@ -57,7 +57,6 @@ def read_recommendation(id_film: int):
         recommendations_list = []
         for idfilm in recommendations_data:
             recommendations = Donnees.getFilmById(idfilm)
-            print(recommendations[0])
             
             recommendation_dict = {
                 "idFilm" : idfilm,
@@ -70,7 +69,6 @@ def read_recommendation(id_film: int):
                 "note": recommendations[0]["note"],
                 "nbVotes": recommendations[0]["nbVotes"],
             }
-            print(recommendation_dict)
             recommendations_list.append(recommendation_dict)
         
         # Creation d'un dictionnaire avec les recommendations
@@ -112,8 +110,7 @@ def read_recommendation(id_film: int):
 # Retourne tous les films
 @app.get("/films/")
 def read_films():
-    films_data = Recommendation.getAllFilm()
-    # print(films_data)
+    films_data = Donnees.getFilmComplet()
     if isinstance(films_data, str):
         # Si il y a un message d'erreur de getAllFilm()
         return JSONResponse(content={"error": films_data}, media_type="application/json", status_code=404)
@@ -140,22 +137,21 @@ def read_films():
 # Retourne un film
 @app.get("/films/{id_film}")
 def read_film(id_film: int):
-    films_data = Recommendation.getFilm(id_film)
+    films_data = Donnees.getFilmById(id_film)
     
     if isinstance(films_data, str):
         # Si il y a un message d'erreur de getFilm()
         return JSONResponse(content={"error": films_data}, media_type="application/json", status_code=404)
     else:
         # Extraction des champs utiles
-        titre = str(films_data.get("titre", None))
-        isAdult = films_data.get("isAdult", None).item()
-        anneeSortie = films_data.get("anneeSortie", None).item()
-        poster = films_data.get("poster", None)
-        description = films_data.get("description", None)
-        dureeMinutes = films_data.get("dureeMinutes", None)
-        note = films_data.get("note", None).item()
-        nbVotes = films_data.get("nbVotes", None).item()
-        nomGenre = films_data.get("nomGenre", None)
+        titre = films_data[0]["titre"]
+        isAdult = films_data[0]["isAdult"]
+        anneeSortie = films_data[0]["anneeSortie"]
+        poster = films_data[0]["poster"]
+        description = films_data[0]["description"]
+        dureeMinutes = films_data[0]["dureeMinutes"]
+        note = films_data[0]["note"]
+        nbVotes = films_data[0]["nbVotes"]
         
         # Création d'un dictionnaire avec ces champs
         result_dict = {
@@ -168,7 +164,6 @@ def read_film(id_film: int):
             "dureeMinutes": dureeMinutes,
             "note": note,
             "nbVotes": nbVotes,
-            "nomGenre": nomGenre
         }
         
         return JSONResponse(content=result_dict, media_type="application/json", status_code=200)

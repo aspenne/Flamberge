@@ -12,6 +12,7 @@ RUN pip install numpy==1.23.5
 RUN pip install pandas==2.1.1
 RUN pip install psycopg2-binary
 RUN pip install scikit-learn==1.3.1
+RUN pip install Levenshtein
 RUN pip install "uvicorn[standard]"
 
 EXPOSE 8000

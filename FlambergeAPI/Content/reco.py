@@ -23,8 +23,8 @@ def getRecommendation(idfilm):
     # print(list(tab[1])[0])
     film2 = []
     
-    # for i in range(len(tab)):
-    for i in range(100):
+    for i in range(len(tab)):
+    # for i in range(100):
        film2.append(info_film_select(list(tab[i])[0]))
     
     # print(list(film2[0]['artiste'][1])[0])
