@@ -35,5 +35,14 @@ function getNumberFilms(){
     return $max[0];
 }
 
+function getFilmVotes4() {
+    // renvoie une liste de 4 films avec plus de 300 000 votes
+    global $dbh;
+    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where nbVotes >= 300000 order by random() limit 4');
+    $sth -> execute(array());
+    $films = $sth -> fetchAll();
+    
+    return $films[0];
+}
 
 ?>
