@@ -99,6 +99,7 @@
     function validateForm() {
       let mdp = document.getElementById("password").value;
       let mdp2 = document.getElementById("password2").value;
+      const birthdate = document.getElementById("naissance").value;
 
       if (mdp !== mdp2) {
         alert("Les mots de passe ne correspondent pas");
@@ -119,6 +120,14 @@
       }
       if (!numberRegex.test(mdp)) {
         conditions.push("un chiffre");
+      }
+      console.log(birthdate);
+      let ma_diff = Date.now() - new Date(birthdate).getTime();
+      let age_dt = new Date(ma_diff);
+      let age = Math.abs(age_dt.getUTCFullYear() - 1970);
+      if (age < 15) {
+        alert("Vous devez avoir au moins 15 ans pour créer un compte.");
+        return false;
       }
 
       if (conditions.length > 0) {
