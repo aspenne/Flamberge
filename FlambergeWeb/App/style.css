@@ -511,14 +511,14 @@ article:last-child {
     width: auto;
     height: 40rem;
     align-self: center;
-    margin-bottom: 450px;
+    margin-bottom: 500px;
     filter: brightness(1);
     transition: 0.75s all ease-out;
 }
 
 .img:hover {
     margin-bottom: 0;
-    filter: brightness(0.4);
+    filter: brightness(0.3);
     transition: 0.75s all ease-out;
 }
 
@@ -530,7 +530,7 @@ article:last-child {
 
 .description {
     position: relative;
-    top: -450px;
+    top: -500px;
     color: #FFF;
     background-color: #ffffff00;
     height: auto;
@@ -540,12 +540,14 @@ article:last-child {
     align-items: center;
     text-align: center;
     padding: 1em !important;
+    font-family: 'Biryani';
     text-decoration: none;
     pointer-events: none;
 }
 
 .description h4 {
-    margin-bottom: 2em;
+    font-size: 48px;
+    margin-top: 0;
 }
 
 .description aside {
