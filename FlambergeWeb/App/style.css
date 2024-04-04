@@ -340,6 +340,8 @@ h1 {
 }
 
 section {
+    border: var(--couleur-secondaire) solid 2px;
+    box-shadow: #349 0px 0px 2px;
     margin: 1em;
     padding: 0.5em;
     border-radius: 8px;
