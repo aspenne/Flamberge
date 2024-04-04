@@ -3,7 +3,6 @@ DROP SCHEMA IF EXISTS flamberge_v2 CASCADE;
 CREATE SCHEMA flamberge_v2;
 SET SCHEMA 'flamberge_v2';    
 
-DROP TABLE IF EXISTS flamberge_v2._film;
 create table flamberge_v2._film(
 	idFilm SERIAL PRIMARY KEY,
     titre VARCHAR(250) NOT NULL,
@@ -16,19 +15,16 @@ create table flamberge_v2._film(
     nbVotes INTEGER
 );
 
-DROP TABLE IF EXISTS flamberge_v2._artiste;
 create table flamberge_v2._artiste(
 	idArtiste SERIAL primary key,
 	nomArtiste Varchar(250)
 );
 
-DROP TABLE IF EXISTS flamberge_v2._role;
 create table flamberge_v2._role(
 	idRole SERIAL primary key,
 	nomRole Varchar(250)
 );
 
-DROP TABLE IF EXISTS flamberge_v2._utilisateur;
 CREATE TABLE flamberge_v2._utilisateur(
   idUser SERIAL PRIMARY KEY,
   email VARCHAR(300) NOT NULL,
@@ -36,20 +32,19 @@ CREATE TABLE flamberge_v2._utilisateur(
   naissance DATE NOT NULL
 );
 
-DROP TABLE IF EXISTS flamberge_v2._exerce_metier;
 CREATE TABLE flamberge_v2._exerce_metier (
     idMetier INTEGER,
     idArtiste INTEGER,
-    CONSTRAINT metier_fk FOREIGN KEY (idMetier) REFERENCES flamberge_V2._metier(idMetier),
+    CONSTRAINT metier_fk FOREIGN KEY (idMetier) REFERENCES flamberge_V2._role(idRole),
     CONSTRAINT artiste_fk FOREIGN KEY (idArtiste) REFERENCES flamberge_V2._artiste(idArtiste),
     CONSTRAINT exerce_metier_pk PRIMARY KEY (idMetier,idArtiste)
+);
 
-DROP TABLE IF EXISTS flamberge_v2._genre;
 create table flamberge_v2._genre(
 	idGenre Serial primary key,
 	nomGenre Varchar(250)
+);
 
-DROP TABLE IF EXISTS flamberge_v2.temp_csv_data;
 CREATE TABLE flamberge_v2.temp_csv_data (
     isAdult INTEGER,
     titre VARCHAR(250),
@@ -96,7 +91,6 @@ INSERT INTO flamberge_v2._genre(nomgenre)
 SELECT DISTINCT trim(unnest(string_to_array(genre, ',')))
 FROM flamberge_v2.temp_csv_data;
 
-DROP TABLE IF EXISTS flamberge_v2._possede_genre;
 CREATE TABLE flamberge_v2._possede_genre (
     idFilm INT,
     idGenre INT,
@@ -127,7 +121,6 @@ JOIN flamberge_v2._film f ON csv.titre = f.titre
 JOIN flamberge_v2._genre g ON g.nomgenre = ANY(string_to_array(csv.genre, ','));
 
 
-DROP TABLE IF EXISTS flamberge_v2._joue_dans;
 create table flamberge_v2._joue_dans(
 	idArtiste int,
 	idFilm int,
