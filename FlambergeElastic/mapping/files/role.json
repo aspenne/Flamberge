@@ -1,8 +1,7 @@
 {
   "mappings": {
     "properties": {
-      "idFilm": { "type": "integer" },
-      "idArtiste": { "type": "integer" },
+      "idRole": { "type": "integer" },
       "nomRole": { "type": "text" }
     }
   }

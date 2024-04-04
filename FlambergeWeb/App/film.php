@@ -1,5 +1,7 @@
 <?php
 
+use Elasticsearch\ClientBuilder;
+
 try {
     include('./connect.php');
     $dbh = new PDO("$driver:host=$server;port=$port;dbname=$dbname", $user, $pass);
@@ -17,7 +19,7 @@ try {
 function getFilmById($id){
     // la fonction qui récupère simplement un film en fonction de son id
     global $dbh;
-    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where idfilm = ?');
+    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where idFilm = ?');
     $sth -> execute(array($id));
     $films = $sth -> fetchAll();
 
@@ -28,12 +30,66 @@ function getFilmById($id){
 function getNumberFilms(){
     // la fonction qui récupère simplement un film en fonction de son id
     global $dbh;
-    $sth = $dbh->prepare('SELECT count (idfilm) from flamberge_V2._film');
+    $sth = $dbh->prepare('SELECT count (idFilm) from flamberge_V2._film');
     $sth -> execute(array());
     $max = $sth -> fetchAll();
 
     return $max[0];
 }
 
+function getFilmVotes4() {
+    // renvoie une liste de 4 films avec plus de 300 000 votes
+    global $dbh;
+    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where nbVotes >= 300000 order by random() limit 4');
+    $sth -> execute(array());
+    $films = $sth -> fetchAll();
+    
+    return $films[0];
+}
+
+function getBestFilmsByNote(){
+    // renvoie une liste de 4 films avec plus de 300 000 votes
+    global $dbh;
+    $sth = $dbh->prepare('SELECT * from flamberge_V2._film where nbVotes >= 3000 order by note DESC limit 10');
+    $sth -> execute(array());
+    $films = $sth -> fetchAll();
+    
+    return $films;
+}
+
+function getBestFilmsByNoteFromElastic() {
+    $client = ClientBuilder::create()->build();
+
+    // Définissez votre requête Elasticsearch pour récupérer les films
+    $params = [
+        'index' => 'votre_index',
+        'body' => [
+            'query' => [
+                'bool' => [
+                    'filter' => [
+                        'range' => [
+                            'nbVotes' => ['gte' => 3000] // "gte" signifie "greater than or equal to"
+                        ]
+                    ]
+                ]
+            ],
+            'sort' => [
+                'note' => ['order' => 'desc'] // Tri par ordre décroissant de la note
+            ],
+            'size' => 10 // Limite de résultats à 10
+        ]
+    ];
+
+    // Exécutez la requête Elasticsearch
+    $response = $client->search($params);
+
+    // Récupérez les résultats de la recherche
+    $films = [];
+    foreach ($response['hits']['hits'] as $hit) {
+        $films[] = $hit['_source'];
+    }
+
+    return $films;
+}
 
 ?>

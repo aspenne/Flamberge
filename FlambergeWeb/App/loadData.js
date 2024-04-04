@@ -225,7 +225,6 @@ function loadFilmDetails(userAge) {
   showLoadingSpinner();
   // Récupère l'id du film dans la page, et l'envoie à l'API
   let id = getFilmIdFromUrl();
-  //console.log(id)
   let div_genres = document.getElementById("div_button_genres");
   let xhr = new XMLHttpRequest();
   xhr.open("GET", "http://localhost:8081/films/" + id + "/fiche", true);
@@ -263,7 +262,9 @@ function loadFilmDetails(userAge) {
           "lightgrey";
       }
 
-      document.getElementById("annee").innerHTML = film.annee;
+      document.getElementById(
+        "annee"
+      ).innerHTML = ` Année : ${film.anneeSortie}`;
 
       if (film.note != -1) {
         document.getElementById("note").innerHTML =
@@ -461,7 +462,7 @@ function loadRecommandationSimilarite() {
   let xhr = new XMLHttpRequest();
   xhr.open(
     "GET",
-    "http://localhost:8081/recommendations/similarite/" + idFilm,
+    "http://localhost:8081/recommendations/" + idFilm, /*similarite/*/
     true
   );
   xhr.onload = function () {

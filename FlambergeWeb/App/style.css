@@ -91,6 +91,48 @@ header>div {
     background-color: #ddd;
     cursor: pointer;
 }
+ 
+.suggestionsContainer {
+    position: absolute;   
+    z-index: 5;
+    display: none;
+    padding: 5px;
+    width: 30em;
+    flex-direction: column;
+    background-color: #fff;  
+    color: #000;
+    border-radius: 0.5em;
+    border: 2px solid rgb(118, 118, 118);
+}
+
+.suggestionsContainer .suggestion{
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    transition: .2s;
+}
+
+.suggestionsContainer img {
+    width: 5em;
+    height: 5em;
+    object-fit: cover;
+    margin-right: 1em;
+}
+
+.suggestionsContainer div {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.suggestionsContainer .suggestion {
+    cursor: pointer;
+}
+
+.suggestionsContainer .suggestion div ~ div {
+    justify-content: space-around;
+}
+
 
 nav {
     margin-left: 1em;
@@ -131,14 +173,8 @@ nav div:hover, nav section:hover{
     transition: 0.4s;
 }
 
-@media screen and (max-width: 1024px) {
-    #search-bar input {
-        width: 15em;
-    }
-}
-
 @media screen and (max-width: 768px) {
-    #search-bar input {
+    #search-bar input, .suggestionsContainer {
         width: 15em;
     }
 
@@ -316,11 +352,6 @@ section h2 {
     margin-left: 2em;
 }
 
-section p,
-section h4 {
-    margin-left: 1em;
-}
-
 section h4 {
     font-weight: 800;
 }
@@ -435,7 +466,7 @@ article:last-child {
     display: flex;
     border: none;
     box-shadow: none;
-    overflow-x: hidden;
+    overflow-x: scroll;
     /* Hide the horizontal scrollbar */
     padding: 20px;
     /* Adjusted as needed */
@@ -507,15 +538,26 @@ article:last-child {
 .laUne {
     border: none;
     box-shadow: none;
-    margin: 5em;
+    margin: 0 0 5rem 0;
+    padding: 0;
+    width: 100%;
+    height: 40rem;
 }
 
 .img {
     background-color: #FFF;
-    width: 50%;
-    height: 100%;
-    height: max-content;
+    width: auto;
+    height: 40rem;
     align-self: center;
+    margin-bottom: 500px;
+    filter: brightness(1);
+    transition: 0.75s all ease-out;
+}
+
+.img:hover {
+    margin-bottom: 0;
+    filter: brightness(0.3);
+    transition: 0.75s all ease-out;
 }
 
 .img a img {
@@ -525,19 +567,25 @@ article:last-child {
 }
 
 .description {
+    position: relative;
+    top: -500px;
     color: #FFF;
-    background-color: #000;
-    height: 100%;
-    width: 50%;
+    background-color: #ffffff00;
+    height: auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
+    text-align: center;
     padding: 1em !important;
+    font-family: 'Biryani';
     text-decoration: none;
+    pointer-events: none;
 }
 
 .description h4 {
-    margin-bottom: 2em;
+    font-size: 48px;
+    margin-top: 0;
 }
 
 .description aside {

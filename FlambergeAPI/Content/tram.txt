@@ -1,0 +1,25 @@
+après selection d'un film
+
+Récupérer l'id du film pour l'identifier dans la base de données.
+Récupérer toutes les informations de ce film utile à la reco : titre, anneesortie, genres, note, nomartiste, metiers, isadult:
+ -> Attributs [titre(3), anneesortie(1), genres(2)[
+    liste des genres], nomartiste(2)[
+        liste des nomartiste [liste des metiers de l'artiste]] 
+ ]
+
+    -Pour les titres il faut les passer dans l'algorythme de similarité (pour les suites de film principalement).
+    -créer pour chaque film une matrice 
+
+    -Penser à proposer ensuite dans la selection les films les mieux notés et selon si le film choisi est adulut proposé des film adult ou non
+
+sortir les 100 film ayant le plus de correspondance après les calculs et en affichés 20/30.
+
+
+On fait de l'item based. 
+
+
+
+fonction reco (film_selectionne):
+    A = récup_les_info(film_selectione) #requete sql surement
+
+    
