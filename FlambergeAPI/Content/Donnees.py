@@ -34,12 +34,12 @@ def init():
     # Artistes
     cur.execute(f"SELECT * FROM {connect.schema}._artiste")
     artistes = pd.DataFrame(cur.fetchall())
-    artistes.columns = ['idArtiste', 'nomArtiste']
+    artistes.columns = ['idartiste', 'nomArtiste']
 
     # Roles
-    cur.execute(f"SELECT * FROM {connect.schema}._role")
-    roles = pd.DataFrame(cur.fetchall())
-    roles.columns = ['idFilm', 'idArtiste', 'nomRole']
+    # cur.execute(f"SELECT * FROM {connect.schema}._role")
+    # roles = pd.DataFrame(cur.fetchall())
+    # roles.columns = ['idFilm', 'idArtiste', 'nomRole']
 
 
     #
@@ -51,7 +51,7 @@ def init():
     # print(films_genres['nomGenre'].value_counts())
     # print(films_genres[['idFilm','titre', 'nomGenre']])
 
-    films_roles = pd.merge(films, roles, on='idFilm')
+    # films_roles = pd.merge(films, roles, on='idFilm')
     #print(films_roles)
 
     #
