@@ -1,7 +1,7 @@
 // Afficher le menu burger
 function toggleMenu() {
-    var nav = document.querySelector('nav');
-    nav.classList.toggle('show');
+  var nav = document.querySelector("nav");
+  nav.classList.toggle("show");
 }
 
 /* ----------------------- */
@@ -9,51 +9,52 @@ function toggleMenu() {
 /* ----------------------- */
 
 window.onscroll = function () {
-    afficherBouton();
+  afficherBouton();
 };
 
 function afficherBouton() {
-    var boutonRetourHaut = document.getElementById("retourHaut");
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        boutonRetourHaut.style.display = "block";
-    } else {
-        boutonRetourHaut.style.display = "none";
-    }
+  var boutonRetourHaut = document.getElementById("retourHaut");
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    boutonRetourHaut.style.display = "block";
+  } else {
+    boutonRetourHaut.style.display = "none";
+  }
 }
 
 // Fonction pour retourner en haut de la page
 function retourEnHaut() {
-    document.body.scrollTop = 0; // Pour les navigateurs Safari
-    document.documentElement.scrollTop = 0; // Pour les autres navigateurs
+  document.body.scrollTop = 0; // Pour les navigateurs Safari
+  document.documentElement.scrollTop = 0; // Pour les autres navigateurs
 }
 
 /* -------------------------------- */
 /*  Documentation - Menu déroulant  */
 /* -------------------------------- */
 document.addEventListener("DOMContentLoaded", function () {
-    const clickableSections = document.querySelectorAll(".clickable-section");
+  const clickableSections = document.querySelectorAll(".clickable-section");
 
-    clickableSections.forEach(function (section) {
-        section.addEventListener("click", function (event) {
-            const content = this.querySelector(".content");
-            const arrowIcon = this.querySelector(".arrow-icon");
+  clickableSections.forEach(function (section) {
+    section.addEventListener("click", function (event) {
+      const content = this.querySelector(".content");
+      const arrowIcon = this.querySelector(".arrow-icon");
 
-            if (content.contains(event.target)) {
-                return; // Clic à l'intérieur du contenu, pas de changement
-            }
+      if (content.contains(event.target)) {
+        return; // Clic à l'intérieur du contenu, pas de changement
+      }
 
-            content.style.display = (content.style.display === "none") ? "block" : "none";
+      content.style.display =
+        content.style.display === "none" ? "block" : "none";
 
-            // Met à jour l'orientation de la flèche
-            if (content.style.display === "none") {
-                arrowIcon.classList.remove("fa-chevron-down");
-                arrowIcon.classList.add("fa-chevron-right");
-            } else {
-                arrowIcon.classList.remove("fa-chevron-right");
-                arrowIcon.classList.add("fa-chevron-down");
-            }
-        });
+      // Met à jour l'orientation de la flèche
+      if (content.style.display === "none") {
+        arrowIcon.classList.remove("fa-chevron-down");
+        arrowIcon.classList.add("fa-chevron-right");
+      } else {
+        arrowIcon.classList.remove("fa-chevron-right");
+        arrowIcon.classList.add("fa-chevron-down");
+      }
     });
+  });
 });
 
 /* ----------------------- */
@@ -64,21 +65,53 @@ const articles = document.querySelectorAll("article");
 const val = document.getElementById("valerian");
 hr_val = document.getElementById("hr-val");
 
-if (val != null){
-    val.addEventListener("click", () => {
-        if (articles[3].style.display == "none") {
-            articles[3].style.display = "block";
-            hr_val.style.display = "block";
-            articles[2].style.marginBottom = "0";
-        } else {
-            articles[3].style.display = "none";
-            hr_val.style.display = "none";
-            articles[2].style.marginBottom = "2em";
-        }});
-    
+if (val != null) {
+  val.addEventListener("click", () => {
     if (articles[3].style.display == "none") {
-        articles[2].style.marginBottom = "2em";
+      articles[3].style.display = "block";
+      hr_val.style.display = "block";
+      articles[2].style.marginBottom = "0";
     } else {
-        articles[2].style.marginBottom = "0";
+      articles[3].style.display = "none";
+      hr_val.style.display = "none";
+      articles[2].style.marginBottom = "2em";
     }
+  });
+
+  if (articles[3].style.display == "none") {
+    articles[2].style.marginBottom = "2em";
+  } else {
+    articles[2].style.marginBottom = "0";
+  }
+}
+
+async function searchAutocomplete(searchTerm) {
+  try {
+    const response = await fetch(
+      `http://localhost:9200/film/_search?pretty=true`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          suggest: {
+            film_title_suggest: {
+              prefix: searchTerm,
+              completion: {
+                field: "titre.suggest",
+                size: 5,
+                fuzzy: {
+                  fuzziness: "AUTO",
+                },
+              },
+            },
+          },
+        }),
+      }
+    );
+
+    const data = await response.json();
+    return data.suggest.film_title_suggest[0].options;
+  } catch (error) {
+    console.error(error);
+  }
 }
