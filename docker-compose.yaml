@@ -48,6 +48,10 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
+      - "http.cors.allow-origin=http://localhost:8080"
+      - "http.cors.enabled=true"
+      - "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization"
+      - "http.cors.allow-credentials=true"
     ports:
       - "9200:9200"
     command: 
@@ -70,8 +74,9 @@ services:
       - "9201:5601"
     depends_on:
       - flamberge-elasticsearch
+      - flamberge_logstash
 
-  logstash:
+  flamberge_logstash:
     container_name: flamberge_logstash
     build: 
       dockerfile: ./FlambergeLogstash/Dockerfile
