@@ -6,6 +6,14 @@ function hideLoadingSpinner() {
   document.getElementById("spinner-overlay").style.display = "none";
 }
 
+function showLoadingSpinner() {
+  document.getElementById("spinner-reco").style.display = "block";
+}
+
+function hideLoadingSpinner() {
+  document.getElementById("spinner-reco").style.display = "none";
+}
+
 function getFilmIdFromUrl() {
   // Récupère la chaîne de requête de l'URL
   var queryString = window.location.search;
@@ -457,7 +465,7 @@ function loadArtiste() {
   xhr.send();
 }
 
-function loadRecommandationSimilarite() {
+function loadRecommandatSimilariteSimilariteion() {
   let idFilm = getFilmIdFromUrl();
   let xhr = new XMLHttpRequest();
   xhr.open(

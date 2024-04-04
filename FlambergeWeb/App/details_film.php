@@ -54,12 +54,16 @@
     <script>loadFilmDetails(<?php echo(date_diff(date_create($_SESSION["user"]["naissance"]), date_create(date("Y-m-d")))->format('%y'));?>)</script>
 
     <section class="section-reco">
+      <div name="div_reco"><button class="button" id="reco">Recommande moi des films</button></div>
+      <div id="spinner-reco"> <!-- Div pour le spinner -->
+        <img id="spinner" class="spinner" src="/images/spinner.gif" alt="Chargement en cours">
+      </div>
       <h3>Recommandations</h3>
       <div class="film film-section" id="row-reco">
-        <script> loadRecommandationSimilarite(); </script>
+        <script> loadRecommandation(); </script>
       </div>
 
-      <div id="bouton_reco"><button class="button" id="reco_link">Faire plus de recommandations</button></div>
+      <!-- <div id="bouton_reco"><button class="button" id="reco_link">Faire plus de recommandations</button></div> -->
     </section>
   </main>
 
