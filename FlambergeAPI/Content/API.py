@@ -59,7 +59,7 @@ def read_recommendation(id_film: int):
                 "idFilm" : id,
                 "titre": str(row["titre"]),
                 "isAdult" : row["isAdult"],
-                "annee": row["annee"],
+                "anneeSortie": row["anneeSortie"],
                 'poster': row["poster"],
                 'description': row["description"],
                 'dureeMinutes': row["dureeMinutes"],
@@ -91,7 +91,7 @@ def read_recommendation(id_film: int):
                 "idFilm" : row["idFilm"],
                 "titre": str(row["titre"]),
                 "isAdult" : row["isAdult"],
-                "annee": row["annee"],
+                "anneeSortie": row["anneeSortie"],
                 'poster': row["poster"],
                 'description': row["description"],
                 'dureeMinutes': row["dureeMinutes"],
@@ -120,7 +120,7 @@ def read_films():
             all_films_dict = {
                 "idFilm" : id,
                 "titre": str(row["titre"]),
-                "annee": row["annee"],
+                "anneeSortie": row["anneeSortie"],
                 "note": row["note"],
                 "nbVotes": row["nbVotes"],
                 "nomGenre": row["nomGenre"]
@@ -145,7 +145,7 @@ def read_film(id_film: int):
         # Extraction des champs utiles
         titre = str(films_data.get("titre", None))
         isAdult = films_data.get("isAdult", None).item()
-        annee = films_data.get("annee", None).item()
+        anneeSortie = films_data.get("anneeSortie", None).item()
         poster = films_data.get("poster", None)
         description = films_data.get("description", None)
         dureeMinutes = films_data.get("dureeMinutes", None)
@@ -158,7 +158,7 @@ def read_film(id_film: int):
             "id film": id_film,
             "titre": titre,
             "isAdult": isAdult,
-            "annee": annee,
+            "anneeSortie": anneeSortie,
             "poster": poster,
             "description": description,
             "dureeMinutes": dureeMinutes,
@@ -212,9 +212,9 @@ def read_filmsAvecRealisateur(id_realisateur: int):
         return JSONResponse(content=result_dict, media_type="application/json", status_code=200)
     
 
-@app.get("/films/autreArtiste/{id_artiste}")
-def read_filmsAvecAutreArtiste(id_artiste: int):
-    films_data = Donnees.getFilmsAvecAutreArtiste(id_artiste)
+@app.get("/films/autreArtiste/{idArtiste}")
+def read_filmsAvecAutreArtiste(idArtiste: int):
+    films_data = Donnees.getFilmsAvecAutreArtiste(idArtiste)
     
     if isinstance(films_data, str):
         # Si il y a un message d'erreur de getFilmsAvecAutreArtiste()

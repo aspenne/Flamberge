@@ -30,7 +30,7 @@ def select_id_film():
                 # Montre les films 
                 print("------------- Films ---------------")
                 for i in range(len(films_trouves)):
-                    print(i, " : ", films_trouves.iloc[i]["titre"], " - ", films_trouves.iloc[i]["nomGenre"], " - ", films_trouves.iloc[i]["annee"])
+                    print(i, " : ", films_trouves.iloc[i]["titre"], " - ", films_trouves.iloc[i]["nomGenre"], " - ", films_trouves.iloc[i]["anneeSortie"])
                 
                 film = input("\nQuel film voulez-vous ? (Entrez -1 pour quitter)\n")
                 while not ((film.isdigit() and int(film) >= 0 and int(film) < len(films_trouves)) or film == "-1"):

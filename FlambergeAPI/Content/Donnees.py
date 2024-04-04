@@ -19,7 +19,7 @@ def init():
     # Films
     cur.execute(f"SELECT * FROM {connect.schema}._film")
     films = pd.DataFrame(cur.fetchall())
-    films.columns = ['idFilm', 'titre', 'isAdult', 'annee', 'poster', 'description', 'dureeMinutes', 'note', 'nbVotes']
+    films.columns = ['idFilm', 'titre', 'anneeSortie', 'poster', 'description', 'isAdult', 'dureeMinutes', 'note', 'nbVotes']
 
     # Genres
     cur.execute(f"SELECT * FROM {connect.schema}._genre")
@@ -34,45 +34,24 @@ def init():
     # Artistes
     cur.execute(f"SELECT * FROM {connect.schema}._artiste")
     artistes = pd.DataFrame(cur.fetchall())
-    artistes.columns = ['idartiste', 'nomArtiste']
+    artistes.columns = ['idArtiste', 'nomArtiste']
 
     # Roles
-    # cur.execute(f"SELECT * FROM {connect.schema}._role")
-    # roles = pd.DataFrame(cur.fetchall())
-    # roles.columns = ['idFilm', 'idArtiste', 'nomRole']
+    cur.execute(f"SELECT * FROM {connect.schema}._role")
+    roles = pd.DataFrame(cur.fetchall())
+    roles.columns = ['idRole', 'nomRole']
 
+    # Joue_dans
+    cur.execute(f"SELECT * FROM {connect.schema}._joue_dans")
+    joue_dans = pd.DataFrame(cur.fetchall())
+    joue_dans.columns = ['idArtiste', 'idFilm', 'idRole']
 
-    #
-    # Fusionner les DataFrames
-    #
+    # Films-Genres
+    genres = pd.merge(possede_genres, genres, on='idGenre')
+    films_genres = pd.merge(genres, films, on='idFilm')
 
-    films_genres = pd.merge(films, possede_genres, on='idFilm')
-    films_genres = pd.merge(films_genres, genres, on='idGenre')
-    # print(films_genres['nomGenre'].value_counts())
-    # print(films_genres[['idFilm','titre', 'nomGenre']])
-
-    # films_roles = pd.merge(films, roles, on='idFilm')
-    #print(films_roles)
-
-    #
-    # Nettoyage des données
-    #
-
-    # Supprimer les films avec des genres qui ont moins de 1000 films, car ils ne sont pas assez pertinents
-    # films_genres = films_genres[films_genres.groupby('nomGenre').nomGenre.transform(len) > 1000]
-    # print(films_genres['nomGenre'].value_counts())
-
-    # Supprimer les films qui n'ont pas de genres ("\N")
-    films_genres = films_genres[films_genres['nomGenre'] != '\\N']
-    # print(films_genres['nomGenre'].value_counts())
-
-    # Supprimer dans les autres DataFrames les films qui ont été supprimés
-    films = films[films['idFilm'].isin(films_genres['idFilm'])]
-    films_roles = films_roles[films_roles['idFilm'].isin(films_genres['idFilm'])]
-    genres = genres[genres['idGenre'].isin(films_genres['idGenre'])]
-    possede_genres = possede_genres[possede_genres['idFilm'].isin(films_genres['idFilm'])]
-    roles = roles[roles['idFilm'].isin(films_genres['idFilm'])]
-    artistes = artistes[artistes['idArtiste'].isin(films_roles['idArtiste'])]
+    film_with_id_role = pd.merge(joue_dans, films, on='idFilm')
+    films_roles = pd.merge(film_with_id_role, roles, on='idRole')
 
 
 init()
@@ -80,7 +59,7 @@ init()
 
 
 def getActeurs(id_film):
-    if id_film in films_roles['idFilm'].unique():
+    if id_film in films_roles['idFilm']:
         # Filter the DataFrame based on the provided id_film and roles containing "actor" or "actress"
         actors_data = films_roles[
             (films_roles['idFilm'] == id_film) & 
@@ -102,7 +81,7 @@ def getActeurs(id_film):
 
 
 def getRealisateurs(id_film):
-    if id_film in films_roles['idFilm'].unique():
+    if id_film in films_roles['idFilm']:
         # Filter the DataFrame based on the provided id_film and role "director"
         realisateurs_data = films_roles[
             (films_roles['idFilm'] == id_film) & 
@@ -123,7 +102,7 @@ def getRealisateurs(id_film):
         return "Aucun film ne possède cet identifiant"
 
 def autresArtistes(id_film):
-    if id_film in films_roles['idFilm'].unique():
+    if id_film in films_roles['idFilm']:
         artistes_data = films_roles[
             (films_roles['idFilm'] == id_film) & 
             (films_roles['nomRole'].str.contains('actor|actress|director', case=False) == False)
@@ -141,13 +120,14 @@ def autresArtistes(id_film):
         return "Aucun film ne possède cet identifiant"
 
 def getFilmComplet(id_film):
-    if id_film in films['idFilm'].unique():
+    if id_film in films['idFilm']:
         film = films[films['idFilm'] == id_film]
                 
         genresFilm = films_genres[films_genres['idFilm'] == id_film]['nomGenre'].to_list()
         
         filmComplet = film.to_dict(orient="records")
-        filmComplet[0]['genres'] = genresFilm
+        possede_genres = pd.merge(films, genres, on='idFilm')
+        filmComplet[0]['genres'] = possede_genres[possede_genres['idFilm'] == id_film]['idFilm'].to_list()
         # filmComplet[0]['artistes'] = {"Acteurs/actrices": getActeurs(id_film)["idArtiste","nomArtiste"], "Réalisateur": getRealisateurs(id_film)["idArtiste","nomArtiste"], "Autres": autresArtistes(id_film)}
         filmComplet[0]['artistes'] = {"Acteurs": getActeurs(id_film), "Réalisateur": getRealisateurs(id_film), "Autres": autresArtistes(id_film)}
         return filmComplet
@@ -165,8 +145,7 @@ def getFilmsAvecActeur(id_acteur):
             
             if films_data.empty:
                 return "Aucun film n'a été trouvé pour cet acteur ou actrice."
-            else:
-                return films_data[['idFilm', 'titre', 'isAdult', 'annee', 'poster', 'description', 'dureeMinutes', 'note', 'nbVotes']].to_dict(orient="records")
+            else:                return films_data[['idFilm', 'titre', 'isAdult', 'anneeSortie', 'poster', 'description', 'dureeMinutes', 'note', 'nbVotes']].to_dict(orient="records")
         else: 
             return "Aucun acteur ou actrice n'a été trouvé avec cet identifiant."
     else:
@@ -187,7 +166,7 @@ def getFilmsAvecRealisateur(id_real):
             if films_data.empty:
                 return "Aucun film n'a été trouvé pour ce réalisateur."
             else:
-                return films_data[['idFilm', 'titre', 'isAdult', 'annee', 'poster', 'description', 'dureeMinutes', 'note', 'nbVotes']].to_dict(orient="records")
+                return films_data[['idFilm', 'titre', 'isAdult', 'anneeSortie', 'poster', 'description', 'dureeMinutes', 'note', 'nbVotes']].to_dict(orient="records")
         else: 
             return "Aucun réalisateur n'a été trouvé avec cet identifiant."
         
@@ -208,7 +187,7 @@ def getFilmsAvecAutreArtiste(id_autre):
             if films_data.empty:
                 return "Aucun film n'a été trouvé pour cet artiste."
             else:
-                return films_data[['idFilm', 'titre', 'isAdult', 'annee', 'poster', 'description', 'dureeMinutes', 'note', 'nbVotes']].to_dict(orient="records")
+                return films_data[['idFilm', 'titre', 'isAdult', 'anneeSortie', 'poster', 'description', 'dureeMinutes', 'note', 'nbVotes']].to_dict(orient="records")
         else: 
             return "Aucun autre artiste n'a été trouvé avec cet identifiant."
         

@@ -12,7 +12,7 @@ from connect import vecteurs_path
 
 def transformation_vecteur():
     vecteur = {}
-    df_groupe_genre = data.films_genres.groupby("idFilm")["nomGenre"].agg(list).reset_index()   # liste des films avec leurs genres sous forme de liste
+    df_groupe_genre = data.films_genres.groupby("idFilm")["nomGenre"]  # liste des films avec leurs genres sous forme de liste
 
     for i , row in df_groupe_genre.iterrows() :     # parcours le dataframe des films liés à leurs genres
         idFilm = row["idFilm"]
@@ -205,7 +205,7 @@ def getRecommendation(id_film) :
             grouped_df = df.groupby(['idFilm', 'titre']).agg({'idFilm' : 'first', 
                                                               'titre' : 'first', 
                                                               'isAdult': 'first',
-                                                              'annee': 'first', 
+                                                              'anneeSortie': 'first', 
                                                               'poster': 'first',
                                                               'description': 'first',
                                                               'dureeMinutes': 'first',
@@ -223,7 +223,7 @@ def getRecommendation(id_film) :
             grouped_df = df.groupby(['idFilm', 'titre']).agg({'idFilm' : 'first', 
                                                               'titre' : 'first', 
                                                               'isAdult': 'first',
-                                                              'annee': 'first', 
+                                                              'anneeSortie': 'first', 
                                                               'poster': 'first',
                                                               'description': 'first',
                                                               'dureeMinutes': 'first',
