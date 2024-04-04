@@ -15,6 +15,7 @@ try {
         $sth -> execute(array($_POST["email"], $_POST["mdp"]));
         $result = $sth->fetch();
         if ($result){
+            session_start();
             $_SESSION["user"]["email"] = $result["email"];
             $_SESSION["user"]["naissance"] = $result["naissance"];
             unset($_POST);

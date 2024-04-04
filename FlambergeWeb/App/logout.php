@@ -1,6 +1,8 @@
 <?php
 // Start the session
-session_start();
+<?php if (!isset($_SESSION["user"])){
+    session_start();
+  }?>
 
 
 // Unset all session variables

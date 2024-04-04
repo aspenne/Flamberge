@@ -28,7 +28,7 @@
             <a href="profil.php">
                 <img src="./images/account.png" alt="Profil" style="height: 60%; margin-top: 35%;">
             </a>
-            <a href="logout.php">
+            <a href="deconnexion.php">
                 <section>Déconnexion</section>
             </a>
         <?php } else { ?>
