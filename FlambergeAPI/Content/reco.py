@@ -1,6 +1,5 @@
 from numpy import dot
 from numpy.linalg import norm
-
 import connect as conn
 import pandas as pd
 import math
@@ -13,50 +12,31 @@ cur = conn.conn.cursor()
 def getRecommendation(idfilm):
     
     film_i = info_film_select(idfilm)
-    # print(film_i)
-    #penser au try catch pour les cas de film genres
+    
     premier_genre = list(film_i['genres'][0])[0]
-    # print(film_i['id'], premier_genre)
-    # print(list_film_potentielle(film_i['id'], premier_genre))
+    
     tab = list_film_potentielle(film_i['id'], premier_genre)
-    # print(tab)
-    # print(list(tab[1])[0])
+    
     film2 = []
     
     for i in range(len(tab)):
-    # for i in range(100):
        film2.append(info_film_select(list(tab[i])[0]))
     
-    # print(list(film2[0]['artiste'][1])[0])
-    # print(film2[0])
-    
-    # print(film2[1]['id'])
     matrice_film_i = compare_attributs(film_i, film_i)
-    # print(matrice_film_i[0])
     matrice_correlation = {}
     for i in range(len(film2)):
         matrice_correlation[film2[i]['id']] = compare_attributs(film_i, film2[i])
-
-    # for id_film, matrice in matrice_correlation.items():
-    #     print(matrice[0])
-    
     
     # similirité entre matrice_film_i et tous les film de la matrice correlation
     tab_similarite = []
     # for i in range(len(matrice_film_i)):
     for id_film, matrice in matrice_correlation.items():
-        # tab_similarite.append((id_film, sim_cos(matrice_film_i[0], matrice[0])))
         tab_similarite.append((id_film, sim_jaccard(matrice_film_i[0], matrice[0])))
     
 
     tableau_similarite_trie = sorted(tab_similarite, key=lambda x: x[1], reverse=True)
     
-    
-    # print(tableau_similarite_trie)
-    # print(sim_cos([3, 1, 2, 1, 12, 2], [0, 0, 2, 1, 0, 2]))
-    
     list_id_film = [t[0] for t in tableau_similarite_trie[:20]]
-    # print(list_id_film)
     
     return list_id_film
 
@@ -67,20 +47,17 @@ cur.execute(schema)
 def info_film_select(id_film_selectionne) :
 
     sql_film = "select idfilm, titre, anneeSortie, note, isadult from _film  where idfilm = '"+str(id_film_selectionne) +"'"
-    # print(sql_film)
+    
     cur.execute(sql_film)
     res_film = cur.fetchall()
-    # print(res_film[0])
     
     sql_artiste = "select distinct a.nomartiste from _joue_dans as jd left outer join _artiste a on jd.idartiste  = a.idartiste where jd.idfilm = " + str(res_film[0][0])
     cur.execute(sql_artiste)
     res_artiste = cur.fetchall()
-    # print(res_artiste[1][0])
     
     sql_genre = "select g.nomgenre from _possede_genre as pg left outer join _genre g on pg.idgenre = g.idgenre where idfilm = " + str(res_film[0][0])
     cur.execute(sql_genre)
     res_genre = cur.fetchall()
-    # print(res_genre[0][0])
     
     dico = {
         'id': "",
@@ -104,13 +81,11 @@ def info_film_select(id_film_selectionne) :
     
     return dico
 
-# print(info_film_select('The Voyager'))
 
 
 def list_film_potentielle(id_i, genre_i):
     #On filtre sur le genre pour éviter d'avoir trop de resultat. On perd de l'information surement mais on évite trop de ralentissement
     sql = "SELECT f.idfilm from _film f inner join _possede_genre pg on f.idfilm = pg.idfilm inner join _genre g on pg.idgenre = g.idgenre where pg.idfilm <> " + str(id_i) +" and nomgenre = '"+genre_i +"' and f.note > 2.5 and f.nbvotes > 50"
-    # print(sql)
     cur.execute(sql)
     res = cur.fetchall()
     
@@ -135,14 +110,12 @@ def compare_attributs(film_i, film2):
     for i in range(len(film2['artiste'])):
         for j in range(len(film_i['artiste'])):    
             artistes_similaires = artistes_similaires + sum(2 for artiste1 in film_i['artiste'][j] for artiste2 in film2['artiste'][i] if artiste1 == artiste2)
-    # print(artistes_similaires)
     
     # Comparaison des genres
     genres_similaires = 0
     for i in range(len(film2['genres'])):
         for j in range(len(film_i['genres'])):
             genres_similaires = genres_similaires + sum(2 for genre1 in film_i['genres'][j] for genre2 in film2['genres'][i] if genre1 == genre2)
-    # print(genres_similaires)
     
     
     # Création de la matrice de corrélation
