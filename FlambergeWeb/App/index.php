@@ -41,10 +41,12 @@
             <a href="details_film.php?idFilm=<?php echo $film["idfilm"]; ?>" class="description">
               <h4><?php echo $film['titre']; ?></h4>
               <?php
-              if ($film['description'] != '\N') {
+              if ($film['description'] != 'N') {
                 echo "<p>";
                 echo $film['description'];
                 echo "</p>";
+              } else {
+                echo "<p> Aucune description disponible </p>";
               }
               ?>
               <?php if ($film['note'] != -1) : ?>
