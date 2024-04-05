@@ -20,13 +20,13 @@
   <?php require("./header.php") ?>
   <main>
     <h1>Bienvenue <?= substr($_SESSION["user"]["email"], 0, strpos($_SESSION["user"]["email"], "@")) ?></h1>
-<?php if(strtoupper($_SESSION["user"]["email"]) == "FLAMBERGE") { ?>
-    <img src="" alt="Photo de ultra beaux gosses">
+<?php if(strtoupper(substr($_SESSION["user"]["email"], 0, strpos($_SESSION["user"]["email"], "@"))) == "FLAMBERGE") { ?>
+    <img src="./images/IMG_6226.jpg" alt="Photo de ultra beaux gosses" style="width: 100%; height: auto;">
 <?php } else {?>
     <p>Votre adresse mail : <?= $_SESSION["user"]["email"] ?></p>
     <p>Né le : <?= date("d-m-Y", strtotime($_SESSION["user"]["naissance"])) ?></p>
     <h2>Vos films notés :</h2>
-    <p>Vous n'avez pas notés de film pour le moment</p>
+    <p>Vous n'avez pas noté de film pour le moment.</p>
     <?php } ?>
   </main>
     <?php require("./footer.php") ?>
