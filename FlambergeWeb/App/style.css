@@ -53,7 +53,7 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #dbdbdb; 
+  background: #222; 
 }
  
 /* Handle */
