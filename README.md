@@ -33,7 +33,7 @@ Assurez-vous d'avoir Docker et Docker Compose installés sur votre système.
 1. Lancez les conteneurs Docker en utilisant Docker Compose :
 
    ```bash
-   docker-compose up -d
+   docker-compose up -d --build
    ```
 
    Cela construira et lancera les conteneurs définis dans le fichier `docker-compose.yml`.
