@@ -32,14 +32,6 @@ CREATE TABLE flamberge_v2._utilisateur(
   naissance DATE NOT NULL
 );
 
-CREATE TABLE flamberge_v2._exerce_metier (
-    idMetier INTEGER,
-    idArtiste INTEGER,
-    CONSTRAINT metier_fk FOREIGN KEY (idMetier) REFERENCES flamberge_V2._role(idRole),
-    CONSTRAINT artiste_fk FOREIGN KEY (idArtiste) REFERENCES flamberge_V2._artiste(idArtiste),
-    CONSTRAINT exerce_metier_pk PRIMARY KEY (idMetier,idArtiste)
-);
-
 create table flamberge_v2._genre(
 	idGenre Serial primary key,
 	nomGenre Varchar(250)
