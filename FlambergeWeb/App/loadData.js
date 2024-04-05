@@ -507,3 +507,27 @@ function loadRecommandationSimilarite() {
   };
   xhr.send();
 }
+
+function loadFilmByGenre(genre) {
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://localhost:8081/films/genre/" + genre, true);
+  xhr.onload = function () {
+    if (this.status == 200) {
+      let obj = JSON.parse(this.responseText);
+
+      if (obj.films.length > 0) {
+        obj.films.forEach((film) => {
+          addData(film);
+        });
+      } else {
+        displayNoResultsMessage(
+          "Aucun film n'a été trouvé avec le genre " + genre
+        );
+      }
+    } else if (this.status == 404) {
+      let obj = JSON.parse(this.responseText);
+      displayNoResultsMessage(obj.error);
+    }
+  };
+  xhr.send();
+}

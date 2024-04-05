@@ -205,29 +205,12 @@ def getFilmsAvecAutreArtiste(id_autre):
         return "Aucun artiste ne possède cet identifiant."
 
 def getFilmsGenre(nom_genre):
-    dfGenres = films_genres.groupby('idFilm')['nomGenre'].agg(list).reset_index()
-    data = pd.merge(films, dfGenres, on="idFilm", how="left")
-    
-    # Trier les genres par ordre alphabétique
-    data['nomGenre'] = data['nomGenre'].apply(lambda x: sorted(x) if isinstance(x, list) else [])
-    # Convertir la liste de genres en chaîne de caractères
-    data['nomGenre'] = data['nomGenre'].apply(lambda x: ','.join(x) if isinstance(x, list) else '')
-
-    if data['nomGenre'].str.lower().eq(nom_genre.lower()).any():        
-        films_data = data[data['nomGenre'].str.contains(nom_genre, case=False)]
-        
-        if films_data.empty:
-            return "Aucun film n'a été trouvé pour ce genre."
-        else:
-            films_data = films_data.rename(columns={'nomGenre': 'Genres'})
-            
-            # Handle NaN values before converting to dictionary
-            films_data = films_data.replace({np.nan: None})
-            
-            return films_data.to_dict(orient="records")
+    if nom_genre in genres['nomGenre'].to_list():
+        films = films_genres[films_genres['nomGenre'] == nom_genre]
+        films = films[:10]
+        return films.to_dict(orient="records")
     else:
         return "Le genre n'existe pas dans la liste des films"
-
 
 def getGenres():
     genres_list = genres['nomGenre'].to_list()

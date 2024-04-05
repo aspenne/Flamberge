@@ -57,6 +57,30 @@ function getBestFilmsByNote(){
     return $films;
 }
 
+function getGenres(){
+    // renvoie une liste de 4 films avec plus de 300 000 votes
+    global $dbh;
+    $sth = $dbh->prepare('SELECT nomGenre, idGenre  from flamberge_V2._genre order by nomGenre ASC');
+    $sth -> execute(array());
+    $genres = $sth->fetchAll();
+
+    return $genres;
+}
+
+function getFilmByGenre($genreId){
+    // renvoie une liste de 4 films avec plus de 300 000 votes
+    global $dbh;
+    $sth = $dbh->prepare('SELECT *
+        FROM flamberge_v2._film f
+        JOIN flamberge_v2._possede_genre pg ON f.idFilm = pg.idFilm
+        JOIN flamberge_v2._genre g ON pg.idGenre = g.idGenre
+        WHERE g.idGenre = ? limit 10');
+    $sth -> execute(array($genreId));
+    $films = $sth -> fetchAll();
+    
+    return $films;
+}
+
 function getBestFilmsByNoteFromElastic() {
     $client = ClientBuilder::create()->build();
 

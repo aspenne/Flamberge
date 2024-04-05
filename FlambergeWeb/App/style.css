@@ -644,6 +644,11 @@ article:last-child {
     }
 }
 
+.selectGenre {
+    align-self: start;
+    margin: 15px 10%;
+}
+
 /* ----------------------- */
 /* details_film             */
 /* ----------------------- */
